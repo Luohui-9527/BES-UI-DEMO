@@ -6,6 +6,83 @@
     margin-left: $sideBarWidth;
     position: relative;
   }
+  
+  .sidebar-avator-container {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    line-height: 20px;
+    background: #304156;
+    padding-top: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  
+      .avatar {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+  
+        .avatar-wrapper {
+          height: 60px;
+  
+          .user-avatar {
+            cursor: pointer;
+            margin: 10px;
+            margin-left: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+          }
+        }
+  
+        .user-info {
+          flex-grow: 1;
+          margin-left: 20px;
+          height: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+  
+          .name {
+            font-size: 14px;
+            color: azure;
+          }
+  
+          .status {
+            font-size: 8px;
+            color: aqua;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+  
+            .dot {
+              width: 8px;
+              height: 8px;
+              border: 1px solid aqua;
+              border-radius: 100px;
+              background-color: aqua;
+            }
+  
+            .value {
+              margin-left: 5px;
+              flex-grow: 1;
+            }
+          }
+        }
+      }
+  
+      .search {
+        width: 100%;
+        padding: 5px;
+      }
+  
+    &.collapse {
+      .sidebar-logo {
+        margin-right: 0px;
+      }
+    }
+  }
 
   .sidebar-container {
     transition: width 0.28s;
@@ -39,7 +116,7 @@
 
     &.has-logo {
       .el-scrollbar {
-        height: calc(100% - 50px);
+        height: calc(100% - 200px);
       }
     }
 
