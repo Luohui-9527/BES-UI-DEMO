@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">数据字典管理</div>
+    <div class="dashboard-text">数据字典增删改查管理</div>
   </div>
 </template>
 
