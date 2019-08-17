@@ -239,7 +239,7 @@ export const constantRoutes = [
         path: 'answer',
         name: 'Answer',
         component: () => import('@/views/exam/answer/index'),
-        meta: { title: '答案查询' }
+        meta: { title: '答卷查询' }
       },
       {
         path: 'grade',
