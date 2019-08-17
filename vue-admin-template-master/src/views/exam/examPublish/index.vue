@@ -1,84 +1,50 @@
 <template>
   <div class="dashboard-container">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
-      <el-form-item label="试卷发布人:">
-        <el-input v-model="formInline.user" placeholder="试卷发布人" />
-      </el-form-item>
-      <el-form-item label="发布时间段:">
-        <el-time-picker v-model="formInline.time" placeholder="选择时间" style="width: 30%" />
-        <label>到</label>
-        <el-time-picker v-model="formInline.time" placeholder="选择时间" style="width: 30%" />
-      </el-form-item>
-      <br>
-      <el-form-item label="考 试 标 题:">
-        <el-input v-model="formInline.user" placeholder="考试标题" />
-      </el-form-item>
-      <el-form-item>
-        <el-form-item label="考试时间段:">
-          <el-time-picker v-model="formInline.time" placeholder="选择时间" style="width: 30%" />
-          <label>到</label>
-          <el-time-picker v-model="formInline.time" placeholder="选择时间" style="width: 30%" />
-        </el-form-item>
-        <el-button type="primary" @click="showTime">查询</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-table
-      ref="multipleTable"
-      :data="tableData"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column
-        type="selection"
-        width="55"
-      />
-      <el-table-column
-        prop=""
-        label="试卷发布人"
-      />
-      <el-table-column
-        prop=""
-        label="发布时间段"
-      />
-      <el-table-column
-        prop=""
-        label="考试结束日期和时间"
-      />
-      <el-table-column
-        prop=""
-        label="计划人数"
-      />
-      <el-table-column
-        prop="name"
-        label="考试时长"
-      />
-      <el-table-column
-        prop="name"
-        label="评卷官"
-      />
-      <el-table-column
-        prop=""
-        label="考试说明"
-      />
-      <el-table-column
-        prop="name"
-        label="状态列"
-      />
-      <el-table-column
-        prop="name"
-        label="发布次数"
-      />
-      <el-table-column
-        prop="name"
-        label="操作列"
-      />
-    </el-table>
-    <div style="margin-top: 20px">
-      <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
-      <el-button @click="toggleSelection()">取消选择</el-button>
-    </div>
+    <el-container style="height: 800px">
+      <el-header style="height:100px; width: 100%">
+        <el-row style="height:50%">
+          试卷发布人：<el-input placeholder="试卷发布人" size="mini" style="width: 140px" />&nbsp;
+          发布时间段：<el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />到
+          <el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />&nbsp;
+          考试时间段：<el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />到
+          <el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />&nbsp;
+          考试标题：<el-input placeholder="考试标题" size="mini" style="width: 140px" />&nbsp;
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
+        </el-row>
+        <el-row style="display: inline">
+          <el-button type="primary" size="mini">发布</el-button>
+          <el-button type="primary" size="mini">删除</el-button>
+          <el-button type="primary" size="mini">修改</el-button>
+        </el-row>
+      </el-header>
+      <el-main v-if="show">
+        <el-table :data="tableData" border style="width: 100%" height="90%">
+          <el-table-column type="selection" width="35" />
+          <el-table-column prop="name" label="试卷发布人" />
+          <el-table-column prop="category" label="发布时间段" />
+          <el-table-column prop="value" label="考试结束日期和时间" />
+          <el-table-column prop="category" label="计划人数" />
+          <el-table-column prop="remark" label="考试时长" />
+          <el-table-column prop="remark" label="评卷官" />
+          <el-table-column prop="remark" label="考试说明" />
+          <el-table-column prop="remark" label="状态列" />
+          <el-table-column prop="remark" label="发布次数" />
+          <el-table-column label="操作" width="210">
+            <el-button type="primary" icon="el-icon-edit" size="mini" circle />
+            <el-button type="success" icon="el-icon-check" size="mini" circle />
+            <el-button type="warning" icon="el-icon-star-off" size="mini" circle />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle />
+          </el-table-column>
+        </el-table>
+        <div class="block">
+          <span class="demonstration" />
+          <el-pagination
+            layout="prev, pager, next"
+            :total="50"
+          />
+        </div>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -88,29 +54,18 @@ export default {
   data() {
     return {
       tableData: [],
-      multipleSelection: [],
-      formInline: {
-        user: '',
-        time: ''
-      }
+      show: true
     }
   },
-
+  mounted() {
+    this.getDictionary()
+  },
   methods: {
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    showTime() {
-      alert(this.formInline.time)
+    getDictionary() {
+      this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
+        this.tableData = res.data
+        console.log(this.getDictionaryData)
+      })
     }
   }
 }
