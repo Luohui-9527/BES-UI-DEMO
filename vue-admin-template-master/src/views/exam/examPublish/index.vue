@@ -3,18 +3,37 @@
     <el-container style="height: 800px">
       <el-header style="height:100px; width: 100%">
         <el-row style="height:50%">
-          试卷发布人：<el-input placeholder="试卷发布人" size="mini" style="width: 140px" />&nbsp;
-          发布时间段：<el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />到
-          <el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />&nbsp;
-          考试时间段：<el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />到
-          <el-time-picker size="mini" placeholder="选择时间" style="width: 120px" />&nbsp;
-          考试标题：<el-input placeholder="考试标题" size="mini" style="width: 140px" />&nbsp;
+          试卷发布人:
+          <el-input placeholder="试卷发布人" size="mini" style="width: 140px" />&nbsp;发布时间段:
+          <el-date-picker
+            v-model="time"
+            size="mini"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          />&nbsp;考试时间段:
+          <el-date-picker
+            v-model="time"
+            size="mini"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          />&nbsp;考试标题:
+          <el-input placeholder="考试标题" size="mini" style="width: 140px" />
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
         <el-row style="display: inline">
-          <el-button type="primary" size="mini">发布</el-button>
-          <el-button type="primary" size="mini">删除</el-button>
-          <el-button type="primary" size="mini">修改</el-button>
+          <el-button type="primary" size="mini">
+            <i class="el-icon-edit" />修改
+          </el-button>
+          <el-button type="primary" size="mini">
+            <i class="el-icon-delete" />删除
+          </el-button>
+          <el-button type="primary" size="mini">
+            <i class="el-icon-circle-plus" />发布
+          </el-button>
         </el-row>
       </el-header>
       <el-main v-if="show">
@@ -31,17 +50,13 @@
           <el-table-column prop="remark" label="发布次数" />
           <el-table-column label="操作" width="210">
             <el-button type="primary" icon="el-icon-edit" size="mini" circle />
-            <el-button type="success" icon="el-icon-check" size="mini" circle />
-            <el-button type="warning" icon="el-icon-star-off" size="mini" circle />
             <el-button type="danger" icon="el-icon-delete" size="mini" circle />
+            <el-button type="warning" icon="el-icon-share" size="mini" circle />
           </el-table-column>
         </el-table>
         <div class="block">
           <span class="demonstration" />
-          <el-pagination
-            layout="prev, pager, next"
-            :total="50"
-          />
+          <el-pagination background layout="prev, pager, next" :total="50" />
         </div>
       </el-main>
     </el-container>
@@ -53,8 +68,9 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [],
-      show: true
+      tableData: [{ remark: 444 }],
+      show: true,
+      time: ''
     }
   },
   mounted() {
@@ -72,7 +88,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .dashboard-container{
-    margin: 30px
-  }
+.dashboard-container {
+  margin: 30px;
+}
 </style>
