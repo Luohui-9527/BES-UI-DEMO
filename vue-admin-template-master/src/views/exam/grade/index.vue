@@ -8,19 +8,21 @@
             <el-option
               v-for="item in options"
               :key="item.value"
+              size="mini"
               :label="item.label"
               :value="item.value"
-              style="width: 20%"
+              style="width: 10%"
             />
           </el-select>&nbsp;&nbsp;&nbsp;&nbsp;交卷时间段:
           <el-date-picker
             v-model="time"
             type="datetimerange"
+            style="width: 33%"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           />&nbsp;&nbsp;&nbsp;&nbsp;考试标题:
-          <el-input placeholder="考试标题" style="width: 7%" />&nbsp;&nbsp;&nbsp;&nbsp;
+          <el-input placeholder="考试标题" style="width: 10%" />&nbsp;&nbsp;&nbsp;&nbsp;
           <el-button type="primary" icon="el-icon-search" @click="getDictionary">查询</el-button>
         </el-row>
         <div style="margin-top:20px">
