@@ -39,30 +39,38 @@
         </div>
       </el-main>
     </el-container>
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
-      <el-form :inline="true" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="字典名" prop="dictionary_name">
-          <el-input v-model="addForm.dictionaryName" auto-complete="off"></el-input>
-        </el-form-item>
-        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-        <el-form-item label="字典类型" prop="dictionary_type">
-          <el-input v-model="addForm.dictionaryType" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="字典值" prop="dictionary_value">
-          <el-input v-model="addForm.dictionaryValue" auto-complete="off"></el-input>
-        </el-form-item>
-        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-        <el-form-item label="是否启用" prop="status">
-          <el-radio v-model="addForm.status" label="1" >是</el-radio>
-          <el-radio v-model="addForm.status" label="2">否</el-radio>
-        </el-form-item>
-        <el-form-item label="备注信息" prop="comment">
-          <el-input v-model="addForm.comment" auto-complete="off"></el-input>
-        </el-form-item>
+    <el-dialog title="新增" width="20%" :visible.sync="addFormVisible" :close-on-click-modal="false">
+      <el-form ref="addForm" :inline="true" :model="addForm" label-width="80px" :rules="addFormRules">
+        <el-row>
+          <el-form-item label="字典名" prop="dictionary_name">
+            <el-input v-model="addForm.dictionaryName" auto-complete="off" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="字典类型" prop="dictionary_type">
+            <el-input v-model="addForm.dictionaryType" auto-complete="off" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="字典值" prop="dictionary_value">
+            <el-input v-model="addForm.dictionaryValue" auto-complete="off" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="是否启用" prop="status">
+            <el-radio v-model="addForm.status" label="1">是</el-radio>
+            <el-radio v-model="addForm.status" label="2">否</el-radio>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="备注信息" prop="comment">
+            <el-input v-model="addForm.comment" auto-complete="off" />
+          </el-form-item>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button type="primary" :loading="addLoading" @click="addSubmit">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -73,27 +81,27 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [{remark: 444}],
+      tableData: [{ remark: 444 }],
       show: true,
       addFormVisible: false,
-      //新增界面数据
+      //  新增界面数据
       addForm: {
-        dictionaryName:'',
-        dictionaryType:'',
-        dictionaryValue:'',
-        status:'',
-        comment:'',
+        dictionaryName: '',
+        dictionaryType: '',
+        dictionaryValue: '',
+        status: '',
+        comment: ''
       },
       addFormRules: {
-      dictionaryName: [{ required: true, message: "请输入字典名", trigger: "blur" }],
-      dictionaryType: [
-        { required: true, message: "请输入字典类型", trigger: "blur" }
-      ],
-      dictionaryValue: [
-        { required: true, message: "请输入字典值", trigger: "blur" }
-      ],
-      status: [{ required: true, message: "请选择是否启用", trigger: "blur" }],
-      comment: [{ required: true, message: "请输入描述信息", trigger: "blur" }]
+        dictionaryName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        dictionaryType: [
+          { required: true, message: '请输入字典类型', trigger: 'blur' }
+        ],
+        dictionaryValue: [
+          { required: true, message: '请输入字典值', trigger: 'blur' }
+        ],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }],
+        comment: [{ required: true, message: '请输入描述信息', trigger: 'blur' }]
       }
     }
   },
@@ -107,7 +115,7 @@ export default {
         console.log(this.getDictionaryData)
       })
     },
-    //显示新增界面
+    //  显示新增界面
     handleAdd: function() {
       this.addFormVisible = true
     }
