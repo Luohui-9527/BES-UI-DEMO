@@ -7,11 +7,11 @@
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
         <el-row style="display: inline">
-          <el-button type="primary" size="mini">增加</el-button>
-          <el-button type="primary" size="mini">删除</el-button>
-          <el-button type="primary" size="mini">修改</el-button>
-          <el-button type="primary" size="mini">导入</el-button>
-          <el-button type="primary" size="mini">导出</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">增加</el-button>
+          <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-edit">修改</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-upload">导入</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
         </el-row>
       </el-header>
       <el-main v-if="show">
@@ -24,7 +24,7 @@
           <el-table-column prop="status" label="状态" />
           <el-table-column prop="company" label="公司" />
           <el-table-column prop="remark" label="备注" />
-          <el-table-column label="操作" width="100%">
+          <el-table-column label="操作" width="200%">
             <template>
               <el-button type="primary" icon="el-icon-edit" size="mini" circle />
               <el-button type="success" icon="el-icon-check" size="mini" circle />
