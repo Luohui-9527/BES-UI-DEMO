@@ -2,12 +2,20 @@
   <div class="dashboard-container">
     <el-container style="height: 800px">
       <el-header style="width: 100%">
+<<<<<<< HEAD
         <el-row>
           考试名:
           <el-input placeholder="考试名" size="mini" style="width: 10%" />&nbsp;
           场次编号:
           <el-input placeholder="场次编号" size="mini" style="width: 10%" />&nbsp;
           考试时间段:
+=======
+        <el-row style="display: inline">
+          <el-col :span="10">
+            考 试 名 &nbsp;:
+            <el-input placeholder="考试名" size="mini" style="width: 50%" />&nbsp;
+          </el-col>考试时间段:
+>>>>>>> 9e363575c0bda4f607777411f7c143f22321b601
           <el-date-picker
             v-model="time"
             size="mini"
@@ -16,8 +24,18 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           />&nbsp;
+<<<<<<< HEAD
           试卷发布人:
           <el-input placeholder="试卷发布人" size="mini" style="width: 10%" />&nbsp;
+=======
+        </el-row>
+        <el-row style="margin-top: 10px">
+          <el-col :span="10">
+            场次编号:
+            <el-input placeholder="场次编号" size="mini" style="width: 50%" />&nbsp;
+          </el-col>试卷发布人:
+          <el-input placeholder="试卷发布人" size="mini" style="width: 40%" />&nbsp;
+>>>>>>> 9e363575c0bda4f607777411f7c143f22321b601
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
       </el-header>
@@ -36,7 +54,7 @@
         </el-table>
         <div class="block">
           <span class="demonstration" />
-          <el-pagination layout="prev, pager, next" :total="50" />
+          <el-pagination background layout="prev, pager, next" :total="50" />
         </div>
       </el-main>
     </el-container>

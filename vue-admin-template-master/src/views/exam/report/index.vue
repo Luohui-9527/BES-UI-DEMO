@@ -22,10 +22,11 @@
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
       </el-header>
-      <p style="margin:0px">
-        &nbsp;&nbsp;
-        <i style="color:#5599AA;font-size:13px" class="el-icon-question">查看详情</i>
-      </p>
+      <div style="margin-left:20px">
+        <el-button type="primary" size="mini">
+          <i class="el-icon-question" />查看详情
+        </el-button>
+      </div>
       <el-main v-if="show">
         <el-table :data="tableData" height="90%" style="width: 100%" border @row-click="changeShow">
           <el-table-column type="selection" width="35" />
@@ -40,7 +41,7 @@
         </el-table>
         <div class="block">
           <span class="demonstration" />
-          <el-pagination layout="prev, pager, next" :total="50" />
+          <el-pagination background layout="prev, pager, next" :total="50" />
         </div>
       </el-main>
     </el-container>
@@ -61,7 +62,7 @@
         <el-col :span="6">
           <div class="block">
             <span class="demonstration" />
-            <el-pagination layout="prev, pager, next" :total="50" />
+            <el-pagination background layout="prev, pager, next" :total="50" />
           </div>
         </el-col>
         <el-col :span="2" :offset="16">
