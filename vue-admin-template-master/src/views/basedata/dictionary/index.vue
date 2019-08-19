@@ -148,11 +148,11 @@ export default {
       //  编辑界面数据
       editForm: {
         id:'',
-        dictionaryName:'tableData.name',
-        dictionaryType:'tableData.category',
-        dictionaryValue:'tableData.value',
-        status:'tableData.status',
-        comment:'tableData.remark'
+        dictionaryName:'',
+        dictionaryType:'',
+        dictionaryValue:'',
+        status:'',
+        comment:''
       }
     }
   },
