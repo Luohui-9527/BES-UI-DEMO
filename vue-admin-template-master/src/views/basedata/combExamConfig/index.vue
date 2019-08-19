@@ -1,12 +1,9 @@
 <template>
   <div class="dashboard-container">
     <el-container style="height: 800px">
-      <el-header style="height:150px; width: 100%">
-        <div style="height: 50px">
-          <i class="el-icon-user">字典管理</i>
-        </div>
-        <el-row style="height:30%">
-          组卷配置项标题：<el-input size="mini" style="width: 140px" />&nbsp;
+      <el-header style="height:10%; width: 100%">
+        <el-row style="height:50%">
+          组卷配置项标题：<el-input size="mini" style="width: 10%" />&nbsp;
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
         <el-row style="display: inline">
@@ -19,15 +16,15 @@
       </el-header>
       <el-main v-if="show">
         <el-table :data="tableData" border style="width: 100%" height="90%">
-          <el-table-column type="selection" width="35" />
+          <el-table-column type="selection" width="30%" />
           <el-table-column prop="name" label="配置项" />
-          <el-table-column prop="name" label="难度" />
-          <el-table-column prop="name" label="修改人" />
-          <el-table-column prop="value" label="更新时间" />
-          <el-table-column prop="remark" label="状态" />
-          <el-table-column prop="remark" label="公司" />
-          <el-table-column prop="category" label="备注" />
-          <el-table-column label="操作" width="210">
+          <el-table-column prop="difficult" label="难度" />
+          <el-table-column prop="updatedBy" label="修改人" />
+          <el-table-column prop="updatedTime" label="更新时间" />
+          <el-table-column prop="status" label="状态" />
+          <el-table-column prop="company" label="公司" />
+          <el-table-column prop="remark" label="备注" />
+          <el-table-column label="操作" width="100%">
             <template>
               <el-button type="primary" icon="el-icon-edit" size="mini" circle />
               <el-button type="success" icon="el-icon-check" size="mini" circle />
