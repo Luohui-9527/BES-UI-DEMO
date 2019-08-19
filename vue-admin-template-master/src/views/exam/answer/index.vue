@@ -4,9 +4,9 @@
       <el-header style="width: 100%">
         <el-row>
           考试名:
-          <el-input placeholder="考试名" size="mini" style="width: 140px" />&nbsp;
+          <el-input placeholder="考试名" size="mini" style="width: 10%" />&nbsp;
           场次编号:
-          <el-input placeholder="场次编号" size="mini" style="width: 140px" />&nbsp;
+          <el-input placeholder="场次编号" size="mini" style="width: 10%" />&nbsp;
           考试时间段:
           <el-date-picker
             v-model="time"
@@ -17,7 +17,7 @@
             end-placeholder="结束日期"
           />&nbsp;
           试卷发布人:
-          <el-input placeholder="试卷发布人" size="mini" style="width: 140px" />&nbsp;
+          <el-input placeholder="试卷发布人" size="mini" style="width: 10%" />&nbsp;
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
       </el-header>
