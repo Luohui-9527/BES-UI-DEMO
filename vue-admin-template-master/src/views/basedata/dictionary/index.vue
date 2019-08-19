@@ -19,8 +19,8 @@
       </el-header>
       <!-- 表格 -->
       <el-main v-if="show">
-        <el-table :data="currentPageData" border style="width: 100%" height="90%" v-loading="listLoading" @selection-change="selectChange">
-          <el-table-column type="selection" width="30%" v-model="editRow" />
+        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" @selection-change="selectChange">
+          <el-table-column v-model="editRow" type="selection" width="30%" />
           <!-- 索引 -->
           <el-table-column type="index" :index="indexMethod" width="30%" />
           <el-table-column prop="name" label="字典名" />
@@ -30,18 +30,18 @@
           <el-table-column prop="remark" label="备注" />
           <el-table-column prop="status" label="状态" />
           <!-- 操作按钮 -->
-          <el-table-column  fixed="right" label="操作" width="150%">
+          <el-table-column fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd" size="mini" circle></el-button>
-              <el-button type="danger" icon="el-icon-delete" @click="mutiDel" size="mini" circle></el-button>
-              <el-button type="primary" icon="el-icon-edit" @click="editDictionaryById(scope.$index,scope.row)" size="mini" circle></el-button>
+              <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" circle @click="handleAdd" />
+              <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
+              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="editDictionaryById(scope.$index,scope.row)" />
             </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-button  icon="el-icon-arrow-left" @click="prevPage" />
-          <span>第{{currentPage}}页/共{{totalPage}}页</span>
-        <el-button  icon="el-icon-arrow-right" @click="nextPage" />
+        <el-button icon="el-icon-arrow-left" @click="prevPage" />
+        <span>第{{ currentPage }}页/共{{ totalPage }}页</span>
+        <el-button icon="el-icon-arrow-right" @click="nextPage" />
       </el-main>
     </el-container>
     <!-- 增加窗口 -->
@@ -70,7 +70,7 @@
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="comment">
-            <el-input type="textarea" :rows="4" v-model="addForm.comment" auto-complete="off" />
+            <el-input v-model="addForm.comment" type="textarea" :rows="4" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -105,7 +105,7 @@
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="comment">
-            <el-input type="textarea" :rows="4" v-model="editForm.comment" auto-complete="off" />
+            <el-input v-model="editForm.comment" type="textarea" :rows="4" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -154,9 +154,9 @@ export default {
       tableData: [{ remark: 444 }, { remark: 455 }],
       //  搜索区域参数
       filters: {
-        dictionaryName:'',
-        dictionaryType:'',
-        mark:''
+        dictionaryName: '',
+        dictionaryType: '',
+        mark: ''
       },
       //  列表Loading加载
       listLoading: false,
@@ -179,22 +179,22 @@ export default {
         dictionaryName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
         dictionaryType: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
         dictionaryValue: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
-        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       },
       //  编辑界面是否显示
       editFormVisible: false,
       //  编辑按钮Loading加载
       editLoading: false,
       //  编辑界面row
-      editRow:"",
+      editRow: '',
       //  编辑界面数据
       editForm: {
-        id:'',
-        dictionaryName:'',
-        dictionaryType:'',
-        dictionaryValue:'',
-        status:'',
-        comment:''
+        id: '',
+        dictionaryName: '',
+        dictionaryType: '',
+        dictionaryValue: '',
+        status: '',
+        comment: ''
       },
       //  分页
       totalPage: 1, //  统共页数，默认为1
@@ -205,14 +205,13 @@ export default {
   },
   mounted() {
     //  初始加载
-    
   },
   methods: {
-    countPages:function(){
+    countPages: function() {
       //  计算一共有几页
       this.totalPage = Math.ceil(this.tableData.length / this.pageSize)
       //  计算得0时设置为1
-      this.totalPage = this.totalPage == 0 ? 1 : this.totalPage
+      this.totalPage = this.totalPage === 0 ? 1 : this.totalPage
       this.getCurrentPageData()
     },
     //  分页
@@ -221,61 +220,51 @@ export default {
     getCurrentPageData() {
       let begin = (this.currentPage - 1) * this.pageSize
       let end = this.currentPage * this.pageSize
-      var oldTable=this.tableData
+      var oldTable = this.tableData
       this.currentPageData = oldTable.slice(
         begin,
         end
       )
     },
-    searchDic:function(name,type,mark){
-      var oldData=this.tableData
-      var newDic=[];
-      for (var i=0;i<oldData.length;i++){
-        var value=oldData[i];
-        if (name==""&&type!=""&&mark!=""){
-          if (value.dictionaryType.indexOf(type)!=-1&&value.mark.indexOf(mark)!=-1) {
+    searchDic: function(name, type, mark) {
+      var oldData = this.tableData
+      var newDic = []
+      for (var i = 0; i < oldData.length; i++) {
+        var value = oldData[i]
+        if (name === '' && type !== '' && mark !== '') {
+          if (value.dictionaryType.indexOf(type) !== -1 && value.mark.indexOf(mark) !== -1) {
             newDic.push(value)
           }
-        }else if (name==""&&type==""&&mark!=""){
-          if (value.mark.indexOf(mark)!=-1){
+        } else if (name !== '' && type !== '' && mark === '') {
+          if (value.mark.indexOf(mark) !== -1) {
             newDic.push(value)
           }
-        } else if (name==""&&type!=""&&mark==""){
-          if (value.dictionaryType.indexOf(type)!=-1){
+        } else if (name !== '' && type !== '' && mark === '') {
+          if (value.dictionaryType.indexOf(type) !== -1) {
             newDic.push(value)
           }
-        }else if (name!=""&&type==""&&mark==""){
-          if (value.dictionaryName.indexOf(name)!=-1){
+        } else if (name !== '' && type !== '' && mark === '') {
+          if (value.dictionaryName.indexOf(name) !== -1) {
             newDic.push(value)
           }
-        }
-        else if (name!=""&&type==""&&mark!=""){
-          if (value.dictionaryName.indexOf(name)!=-1&&value.mark.indexOf(mark)!=-1){
+        } else if (name !== '' && type !== '' && mark === '') {
+          if (value.dictionaryName.indexOf(name) !== -1 && value.mark.indexOf(mark) !== -1) {
             newDic.push(value)
           }
-        } else if (name!=""&&type!=""&&mark==""){
-          if (value.dictionaryName.indexOf(name)!=-1&&value.dictionaryType.indexOf(type)!=-1){
+        } else if (name !== '' && type !== '' && mark === '') {
+          if (value.dictionaryName.indexOf(name) !== -1 && value.dictionaryType.indexOf(type) !== -1) {
             newDic.push(value)
           }
-        } else if (name==""&&type==""&&mark==""){
-          this.getResult();
-          newDic=this.tableData;
-        } else if (name!=""&&type!=""&&mark!=""){
-          if (value.dictionaryType.indexOf(type)!=-1&&value.dictionaryName.indexOf(name)!=-1&&value.mark.indexOf(mark)!=-1){
-            newDic.push(value);
+        } else if (name === '' && type === '' && mark === '') {
+          this.getResult()
+          newDic = this.tableData
+        } else if (name !== '' && type !== '' && mark !== '') {
+          if (value.dictionaryType.indexOf(type) !== -1 && value.dictionaryName.indexOf(name) !== -1 && value.mark.indexOf(mark) !== -1) {
+            newDic.push(value)
           }
         }
       }
       this.countSearchPages(newDic)
-    },
-    getCurrentPageData() {
-      let begin = (this.currentPage - 1) * this.pageSize;
-      let end = this.currentPage * this.pageSize;
-      var oldTable=this.tableData;
-      this.currentPageData = oldTable.slice(
-        begin,
-        end
-      );
     },
     getDictionary() {
       this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
@@ -287,211 +276,211 @@ export default {
     handleAdd: function() {
       this.addFormVisible = true
     },
-    //新增
+    //  新增
     addSubmit: function() {
       this.$refs.addForm.validate(valid => {
         if (valid) {
-          if (this.addForm.dictionaryName == "") {
+          if (this.addForm.dictionaryName === '') {
             this.$message({
-              message: "请填写字典名字",
-              type: "error"
-            });
-            return;
+              message: '请填写字典名字',
+              type: 'error'
+            })
+            return
           }
-          if (this.addForm.dictionaryType == "") {
+          if (this.addForm.dictionaryType === '') {
             this.$message({
-              message: "请填写字典类型",
-              type: "error"
-            });
-            return;
+              message: '请填写字典类型',
+              type: 'error'
+            })
+            return
           }
-          if (this.addForm.status == "") {
-            this.addForm.status = "1";
+          if (this.addForm.status === '') {
+            this.addForm.status = '1'
           }
-          if (this.addForm.dictionaryValue==""){
+          if (this.addForm.dictionaryValue === '') {
             this.$message({
-              message:"请填写字典值",
-              type:"error"
+              message: '请填写字典值',
+              type: 'error'
             })
           }
-          if (this.addForm.comment==""){
+          if (this.addForm.comment === '') {
             this.$message({
-              message:"请填写描述",
-              type:"error"
+              message: '请填写描述',
+              type: 'error'
             })
           }
-          this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.addLoading = true;
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.addLoading = true
             var CommonRequest = {
-              url:"http:localhost:8090/dictionary/save",
-              method:"POST",
-              data:this.addForm
-            };
+              url: 'http:localhost:8090/dictionary/save',
+              method: 'POST',
+              data: this.addForm
+            }
             Axios({
-              method:'POST',
-              baseURL:"/api/dictionary/save",
-              data:CommonRequest
+              method: 'POST',
+              baseURL: '/api/dictionary/save',
+              data: CommonRequest
             }).then(CommonResponse => {
-              if (CommonResponse && CommonResponse.data.status=="success") {
-                this.addLoading = false;
+              if (CommonResponse && CommonResponse.data.status === 'success') {
+                this.addLoading = false
                 this.$message({
                   message: CommonResponse.data.data,
-                  type: "success"
-                });
+                  type: 'success'
+                })
               }
-              this.$refs["addForm"].resetFields();
-              this.addFormVisible = false;
-              this.getResult(1);
-              this.getCurrentPageData();
-            });
-          });
+              this.$refs['addForm'].resetFields()
+              this.addFormVisible = false
+              this.getResult(1)
+              this.getCurrentPageData()
+            })
+          })
         }
-      });
+      })
     },
     //  显示编辑界面
     handleEdit: function(index, row) {
-      this.editFormVisible = true;
-      this.editForm = Object.assign({}, row);
-    }, 
-    editDictionaryById:function(index, row){
-      this.editFormVisible=true;
-      this.editForm = Object.assign({}, row);
+      this.editFormVisible = true
+      this.editForm = Object.assign({}, row)
+    },
+    editDictionaryById: function(index, row) {
+      this.editFormVisible = true
+      this.editForm = Object.assign({}, row)
     },
     editSubmit: function() {
-      if (this.editForm.dictionaryName == "") {
+      if (this.editForm.dictionaryName === '') {
         this.$message({
-          message: "请填写字典名字",
-          type: "error"
-        });
-        return;
+          message: '请填写字典名字',
+          type: 'error'
+        })
+        return
       }
-      if (this.editForm.dictionaryType == "") {
+      if (this.editForm.dictionaryType === '') {
         this.$message({
-          message: "请填写字典类型",
-          type: "error"
-        });
-        return;
+          message: '请填写字典类型',
+          type: 'error'
+        })
+        return
       }
-      if (this.editForm.status == "") {
-        this.addForm.status = "1";
+      if (this.editForm.status === '') {
+        this.addForm.status = '1'
       }
-      if (this.editForm.dictionaryValue==""){
+      if (this.editForm.dictionaryValue === '') {
         this.$message({
-          message:"请填写字典值",
-          type:"error"
+          message: '请填写字典值',
+          type: 'error'
         })
       }
-      if (this.editForm.comment==""){
+      if (this.editForm.comment === '') {
         this.$message({
-          message:"请填写描述",
-          type:"error"
+          message: '请填写描述',
+          type: 'error'
         })
       }
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            var newDic={
-              id:this.editForm.id,
-              dictionaryName:this.editForm.dictionaryName,
-              dictionaryType:this.editForm.dictionaryType,
-              dictionaryValue:this.editForm.dictionaryValue,
-              comment:this.editForm.comment,
-              status:this.editForm.status,
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            var newDic = {
+              id: this.editForm.id,
+              dictionaryName: this.editForm.dictionaryName,
+              dictionaryType: this.editForm.dictionaryType,
+              dictionaryValue: this.editForm.dictionaryValue,
+              comment: this.editForm.comment,
+              status: this.editForm.status
             }
             var CommonRequest = {
-              url:"http:localhost:8081/dictionary/edit",
-              method:"POST",
-              data:newDic
-            };
+              url: 'http:localhost:8081/dictionary/edit',
+              method: 'POST',
+              data: newDic
+            }
             Axios({
-              method:'POST',
-              baseURL:"/api/dictionary/edit",
-              data:CommonRequest
+              method: 'POST',
+              baseURL: '/api/dictionary/edit',
+              data: CommonRequest
             })
-            .then(CommonResponse => {
-              this.editLoading = false;
-              if (CommonResponse && CommonResponse.data.status=="success"){
-                this.$message({
-                  message: CommonResponse.data.data,
-                  type: "success"
-                });
-              } else {
-                this.$message({
-                  message: CommonResponse.data.data.errorMessage,
-                  type: "fail"
-                });
-              }
-              this.$refs["editForm"].resetFields();
-              this.editFormVisible = false;
-              this.getResult(1);
-              this.getCurrentPageData();
-            });
-          });
+              .then(CommonResponse => {
+                this.editLoading = false
+                if (CommonResponse && CommonResponse.data.status === 'success') {
+                  this.$message({
+                    message: CommonResponse.data.data,
+                    type: 'success'
+                  })
+                } else {
+                  this.$message({
+                    message: CommonResponse.data.data.errorMessage,
+                    type: 'ail'
+                  })
+                }
+                this.$refs['editForm'].resetFields()
+                this.editFormVisible = false
+                this.getResult(1)
+                this.getCurrentPageData()
+              })
+          })
         }
-      });
-    },
-    //table序号
-    indexMethod(index) {
-      return index + 1;
-    },
-    //批量选中
-    selectChange: function(val) {
-      this.selectList = val;
-    },
-    //批量删除
-    mutiDel:function(){
-      this.$confirm("确认提交吗？", "提示", {}).then(() => {
-        const length = this.selectList.length;
-        for (let i = 0; i < length; i++) {
-          this.deleteDic(this.selectList[i].id);
-        }
-        this.getResult(1);
-        this.getCurrentPageData();
       })
     },
-    //单次删除
-    deleteDic:function(id){
+    //  table序号
+    indexMethod(index) {
+      return index + 1
+    },
+    //  批量选中
+    selectChange: function(val) {
+      this.selectList = val
+    },
+    //  批量删除
+    mutiDel: function() {
+      this.$confirm('确认提交吗？', '提示', {}).then(() => {
+        const length = this.selectList.length
+        for (let i = 0; i < length; i++) {
+          this.deleteDic(this.selectList[i].id)
+        }
+        this.getResult(1)
+        this.getCurrentPageData()
+      })
+    },
+    //  单次删除
+    deleteDic: function(id) {
       var CommonRequest = {
-        url:"http:localhost:8081/dictionary/edit",
-        method:"POST",
-        data:id
-      };
+        url: 'http:localhost:8081/dictionary/edit',
+        method: 'POST',
+        data: id
+      }
       Axios({
-        method:'POST',
-        baseURL:"/api/dictionary/del",
-        data:CommonRequest
+        method: 'POST',
+        baseURL: '/api/dictionary/del',
+        data: CommonRequest
       }).then(CommonResponse => {
         this.editLoading = false
-        if (CommonResponse && CommonResponse.data.status=="success"){
+        if (CommonResponse && CommonResponse.data.status === 'success') {
           this.$message({
             message: CommonResponse.data.data,
-            type: "success"
+            type: 'success'
           })
         } else {
           this.$message({
             message: CommonResponse.data.data.errorMessage,
-            type: "fail"
+            type: 'fail'
           })
         }
-        this.selectList = [];
+        this.selectList = []
       })
     },
     getResult: function(val) {
-      this.currentPage=val
+      this.currentPage = val
       this.listLoading = true
-      var data={
+      var data = {
       }
       var CommonRequest = {
-        url:"http:localhost:8081/dictionary/queryAll",
-        method:"POST",
-        data:data
-      };
+        url: 'http:localhost:8081/dictionary/queryAll',
+        method: 'POST',
+        data: data
+      }
       Axios({
-        method:'POST',
-        baseURL:"/api/dictionary/queryAll",
-        data:CommonRequest
+        method: 'POST',
+        baseURL: '/api/dictionary/queryAll',
+        data: CommonRequest
       }).then(CommonResponse => {
-        if (CommonResponse && CommonResponse.data.status=='success') {
+        if (CommonResponse && CommonResponse.data.status === 'success') {
           var object = CommonResponse.data.data
           var length = Object.keys(object)
           console.log(length)
