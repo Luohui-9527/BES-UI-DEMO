@@ -26,10 +26,11 @@ const users = {
 export default [
   // user login
   {
-    url: '/user/login',
+    url: '/login/check',
     type: 'post',
     response: config => {
-      const { username } = config.body
+      const username = 'admin'
+      console.log(config)
       const token = tokens[username]
 
       // mock error
@@ -41,16 +42,20 @@ export default [
       }
 
       return {
-        code: 200,
-        data: token
+        head: {
+          code: '200'
+        },
+        body: {
+          data: token
+        }
       }
     }
   },
 
   // get user info
   {
-    url: '/user/info\.*',
-    type: 'get',
+    url: '/login/getInfo',
+    type: 'post',
     response: config => {
       const { token } = config.query
       const info = users[token]
@@ -64,8 +69,12 @@ export default [
       }
 
       return {
-        code: 200,
-        data: info
+        head: {
+          code: '200'
+        },
+        body: {
+          data: info
+        }
       }
     }
   },
@@ -95,12 +104,16 @@ export default [
 
   // user logout
   {
-    url: '/user/logout',
+    url: '/login/logout',
     type: 'post',
     response: _ => {
       return {
-        code: 200,
-        data: 'success'
+        head: {
+          code: '200'
+        },
+        body: {
+          data: 'success'
+        }
       }
     }
   }

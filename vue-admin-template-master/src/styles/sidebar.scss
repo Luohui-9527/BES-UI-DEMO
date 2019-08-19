@@ -18,15 +18,15 @@
     display: flex;
     flex-direction: column;
   
-      .avatar {
+      .profilePicture {
         display: flex;
         flex-direction: row;
         flex-grow: 1;
   
-        .avatar-wrapper {
+        .profilePicture-wrapper {
           height: 60px;
   
-          .user-avatar {
+          .user-profilePicture {
             cursor: pointer;
             margin: 10px;
             margin-left: 15px;

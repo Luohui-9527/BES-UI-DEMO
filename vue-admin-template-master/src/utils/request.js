@@ -50,8 +50,8 @@ service.interceptors.response.use(
    * 您还可以通过HTTP状态代码判断状态
    */
   response => {
-    const res = response.data
-
+    console.log(response)
+    const res = response.data.head
     // 如果自定义代码不是20000，则判断为错误。
     if (res.code !== code.SUCCESS) {
       Message({
@@ -75,7 +75,7 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res
+      return response.data
     }
   },
 

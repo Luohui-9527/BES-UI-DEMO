@@ -1,8 +1,8 @@
 <template>
   <div class="sidebar-avator-container" :class="{'collapse':collapse}">
-    <div class="avatar">
-      <div class="avatar-wrapper">
-        <img src="@/assets/my.jpg" class="user-avatar">
+    <div class="profilePicture">
+      <div class="profilePicture-wrapper">
+        <img src="@/assets/my.jpg" class="user-profilePicture">
       </div>
       <div class="user-info">
         <span class="name">管理员</span>
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'avatar'
+      'profilePicture'
     ])
   }
 }
