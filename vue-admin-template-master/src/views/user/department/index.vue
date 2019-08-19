@@ -2,11 +2,11 @@
   <div class="dashboard-container">
     <el-container>
       <el-aside width="180px">
-        <h1 class="el-icon-folder">
+        <h3 class="el-icon-folder" style="margin: 0px">
           组织机构
           <i class="el-icon-plus" />
           <i class="el-icon-refresh-left" />
-        </h1>
+        </h3>
         <el-tree
           ref="SlotMenuList"
           :data="setTree"
@@ -26,7 +26,7 @@
                 <span :title="node.label">{{ node.label }}</span>
               </span>
               <span v-show="!data.children || data.children.length == 0">
-                <i class style="margin-right:10px" />>
+                <i class style="margin-right:10px" />
                 <span :title="node.label">{{ node.label }}</span>
               </span>
             </span>
@@ -164,17 +164,14 @@ export default {
     },
     handleRightSelect(key) {
       console.log(key)
-      if (key === 1) {
+      if (key === '1') {
         this.NodeAdd(this.NODE, this.DATA)
         this.menuVisible = false
-      } else if (key === 2) {
+      } else if (key === '2') {
         this.NodeEdit(this.NODE, this.DATA)
         this.menuVisible = false
-      } else if (key === 3) {
+      } else if (key === '3') {
         this.NodeDel(this.NODE, this.DATA)
-        this.menuVisible = false
-      } else if (key === 4) {
-        console.log('4')
         this.menuVisible = false
       }
     },
