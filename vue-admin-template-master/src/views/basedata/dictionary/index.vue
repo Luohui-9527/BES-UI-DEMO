@@ -217,15 +217,16 @@ export default {
     //  分页
     //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
     //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
-    getCurrentPageData() {
-      let begin = (this.currentPage - 1) * this.pageSize
-      let end = this.currentPage * this.pageSize
-      var oldTable = this.tableData
-      this.currentPageData = oldTable.slice(
-        begin,
-        end
-      )
-    },
+    // getCurrentPageData() {
+    //   let begin = (this.currentPage - 1) * this.pageSize
+    //   let end = this.currentPage * this.pageSize
+    //   var oldTable = this.tableData
+    //   this.currentPageData = oldTable.slice(
+    //     begin,
+    //     end
+    //   )
+    // },
+    //  获取全部数据
     searchDic: function(name, type, mark) {
       var oldData = this.tableData
       var newDic = []
@@ -266,6 +267,7 @@ export default {
       }
       this.countSearchPages(newDic)
     },
+    // 获取
     getDictionary() {
       this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
         this.tableData = res.data
