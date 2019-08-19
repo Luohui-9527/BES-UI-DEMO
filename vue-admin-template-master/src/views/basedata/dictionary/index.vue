@@ -2,23 +2,26 @@
   <div class="dashboard-container">
     <el-container style="height: 800px">
       <el-header style="height:10%; width: 100%">
+        <!-- 表头 -->
         <el-row style="height:50%">
           字典名称：<el-input size="mini" style="width: 10%" />&nbsp;
           字典类型：<el-input size="mini" style="width: 10%" />&nbsp;
           <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
         </el-row>
+        <!-- 按钮 -->
         <el-row style="display: inline">
           <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="editDictionaryById({},selectList[0])">修改</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-upload">导入</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
           <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
         </el-row>
       </el-header>
+      <!-- 表格 -->
       <el-main v-if="show">
         <el-table :data="currentPageData" border style="width: 100%" height="90%" v-loading="listLoading" @selection-change="selectChange">
           <el-table-column type="selection" width="30%" v-model="editRow" />
-          <!--索引-->
+          <!-- 索引 -->
           <el-table-column type="index" :index="indexMethod" width="30%" />
           <el-table-column prop="name" label="字典名" />
           <el-table-column prop="category" label="字典类型" />
@@ -26,6 +29,7 @@
           <el-table-column prop="updatedTime" label="更新时间" />
           <el-table-column prop="remark" label="备注" />
           <el-table-column prop="status" label="状态" />
+          <!-- 操作按钮 -->
           <el-table-column  fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
               <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd" size="mini" circle></el-button>
@@ -34,11 +38,13 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页 -->
         <el-button  icon="el-icon-arrow-left" @click="prevPage" />
           <span>第{{currentPage}}页/共{{totalPage}}页</span>
         <el-button  icon="el-icon-arrow-right" @click="nextPage" />
       </el-main>
     </el-container>
+    <!-- 增加窗口 -->
     <el-dialog title="基本信息" width="400px" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
         <el-row>
@@ -73,6 +79,7 @@
         <el-button type="primary" :loading="addLoading" @click="addSubmit">提交</el-button>
       </div>
     </el-dialog>
+    <!-- 修改窗口 -->
     <el-dialog title="基本信息" width="400px" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form ref="editForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
         <el-row>
@@ -107,6 +114,29 @@
         <el-button type="primary" :loading="editLoading" @click="editSubmit">提交</el-button>
       </div>
     </el-dialog>
+    <!--导入窗口-->
+    <el-dialog title="导入窗口" width="400px" :visible.sync="importFormVisible" :close-on-click-modal="false">
+      <el-form ref="importForm" :inline="true" :model="importForm" label-width="80px">
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="3"
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+        >
+          <div style="align:center"><el-button size="small" type="primary" center>点击上传</el-button></div>
+          <div slot="tip" class="el-upload__tip">只能上传 xlsx / xls 文件，且不超过1M</div>
+        </el-upload>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="importFormVisible = false">取消</el-button>
+        <el-button type="primary" :loading="importLoading" @click="importSubmit">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -116,6 +146,11 @@ export default {
   name: 'Position',
   data() {
     return {
+      // 导入窗口显示
+      importFormVisible: false,
+      // 文件上传List
+      fileList: [],
+      //  返回数据
       tableData: [{ remark: 444 }, { remark: 455 }],
       //  搜索区域参数
       filters: {
@@ -169,7 +204,8 @@ export default {
     }
   },
   mounted() {
-    this.getDictionary()
+    //  初始加载
+    
   },
   methods: {
     countPages:function(){
@@ -251,6 +287,67 @@ export default {
     handleAdd: function() {
       this.addFormVisible = true
     },
+    //新增
+    addSubmit: function() {
+      this.$refs.addForm.validate(valid => {
+        if (valid) {
+          if (this.addForm.dictionaryName == "") {
+            this.$message({
+              message: "请填写字典名字",
+              type: "error"
+            });
+            return;
+          }
+          if (this.addForm.dictionaryType == "") {
+            this.$message({
+              message: "请填写字典类型",
+              type: "error"
+            });
+            return;
+          }
+          if (this.addForm.status == "") {
+            this.addForm.status = "1";
+          }
+          if (this.addForm.dictionaryValue==""){
+            this.$message({
+              message:"请填写字典值",
+              type:"error"
+            })
+          }
+          if (this.addForm.comment==""){
+            this.$message({
+              message:"请填写描述",
+              type:"error"
+            })
+          }
+          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+            this.addLoading = true;
+            var CommonRequest = {
+              url:"http:localhost:8090/dictionary/save",
+              method:"POST",
+              data:this.addForm
+            };
+            Axios({
+              method:'POST',
+              baseURL:"/api/dictionary/save",
+              data:CommonRequest
+            }).then(CommonResponse => {
+              if (CommonResponse && CommonResponse.data.status=="success") {
+                this.addLoading = false;
+                this.$message({
+                  message: CommonResponse.data.data,
+                  type: "success"
+                });
+              }
+              this.$refs["addForm"].resetFields();
+              this.addFormVisible = false;
+              this.getResult(1);
+              this.getCurrentPageData();
+            });
+          });
+        }
+      });
+    },
     //  显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
@@ -259,6 +356,79 @@ export default {
     editDictionaryById:function(index, row){
       this.editFormVisible=true;
       this.editForm = Object.assign({}, row);
+    },
+    editSubmit: function() {
+      if (this.editForm.dictionaryName == "") {
+        this.$message({
+          message: "请填写字典名字",
+          type: "error"
+        });
+        return;
+      }
+      if (this.editForm.dictionaryType == "") {
+        this.$message({
+          message: "请填写字典类型",
+          type: "error"
+        });
+        return;
+      }
+      if (this.editForm.status == "") {
+        this.addForm.status = "1";
+      }
+      if (this.editForm.dictionaryValue==""){
+        this.$message({
+          message:"请填写字典值",
+          type:"error"
+        })
+      }
+      if (this.editForm.comment==""){
+        this.$message({
+          message:"请填写描述",
+          type:"error"
+        })
+      }
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+            var newDic={
+              id:this.editForm.id,
+              dictionaryName:this.editForm.dictionaryName,
+              dictionaryType:this.editForm.dictionaryType,
+              dictionaryValue:this.editForm.dictionaryValue,
+              comment:this.editForm.comment,
+              status:this.editForm.status,
+            }
+            var CommonRequest = {
+              url:"http:localhost:8081/dictionary/edit",
+              method:"POST",
+              data:newDic
+            };
+            Axios({
+              method:'POST',
+              baseURL:"/api/dictionary/edit",
+              data:CommonRequest
+            })
+            .then(CommonResponse => {
+              this.editLoading = false;
+              if (CommonResponse && CommonResponse.data.status=="success"){
+                this.$message({
+                  message: CommonResponse.data.data,
+                  type: "success"
+                });
+              } else {
+                this.$message({
+                  message: CommonResponse.data.data.errorMessage,
+                  type: "fail"
+                });
+              }
+              this.$refs["editForm"].resetFields();
+              this.editFormVisible = false;
+              this.getResult(1);
+              this.getCurrentPageData();
+            });
+          });
+        }
+      });
     },
     //table序号
     indexMethod(index) {
@@ -282,7 +452,7 @@ export default {
     //单次删除
     deleteDic:function(id){
       var CommonRequest = {
-        url:"http:localhost:8090/dictionary/edit",
+        url:"http:localhost:8081/dictionary/edit",
         method:"POST",
         data:id
       };
@@ -312,7 +482,7 @@ export default {
       var data={
       }
       var CommonRequest = {
-        url:"http:localhost:8090/dictionary/queryAll",
+        url:"http:localhost:8081/dictionary/queryAll",
         method:"POST",
         data:data
       };
@@ -321,20 +491,37 @@ export default {
         baseURL:"/api/dictionary/queryAll",
         data:CommonRequest
       }).then(CommonResponse => {
-        if (CommonResponse && CommonResponse.data.status=="success"){
-          var object=CommonResponse.data.data
-          var length=Object.keys(object)
+        if (CommonResponse && CommonResponse.data.status=='success') {
+          var object = CommonResponse.data.data
+          var length = Object.keys(object)
           console.log(length)
           this.tableData = object
-          //this.count = length;
+          //  this.count = length;
           this.listLoading = false
-          this.totalPage=length
+          this.totalPage = length
           this.countPages()
-        }else {
+        } else {
           alert(CommonResponse.data.data.errorMessage)
         }
       })
     },
+    // 显示导入页面
+    handleImport: function() {
+      this.importFormVisible = true
+    },
+    // 文件相关方法
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    }
   }
 }
 </script>
