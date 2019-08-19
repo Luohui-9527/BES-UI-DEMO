@@ -1,83 +1,25 @@
 <template>
   <div class="dashboard-container">
     <el-container>
-      <el-aside width="180px">
-        <h3 class="el-icon-folder" style="margin: 0px">
-          组织机构
-          <i class="el-icon-plus" />
-          <i class="el-icon-refresh-left" />
-        </h3>
-        <el-tree
-          ref="SlotMenuList"
-          :data="setTree"
-          :props="defaultProps"
-          node-key="id"
-          :filter-node-method="filterNode"
-          style="margin-top:20px"
-          accordion
-          @node-contextmenu="rihgtClick"
-        >
-          <span slot-scope="{ node, data }" class="span-ellipsis">
-            <span v-show="!node.isEdit">
-              <span v-show="data.children && data.children.length >= 1">
-                <i
-                  :class="{ 'fa fa-plus-square': !node.expanded, 'fa fa-minus-square':node.expanded}"
-                />
-                <span :title="node.label">{{ node.label }}</span>
-              </span>
-              <span v-show="!data.children || data.children.length == 0">
-                <i class style="margin-right:10px" />
-                <span :title="node.label">{{ node.label }}</span>
-              </span>
-            </span>
-            <!-- 编辑输入框 -->
-            <span v-show="node.isEdit">
-              <el-input
-                :ref="'slotTreeInput'+data.id"
-                v-model="data.name"
-                class="slot-t-input"
-                size="mini"
-                autofocus
-                @blur.stop="NodeBlur(node, data)"
-                @keyup.enter.native="NodeBlur(node, data)"
-              />
-            </span>
-          </span>
-        </el-tree>
-        <!--鼠标右键点击出现页面-->
-        <div v-show="menuVisible">
-          <el-menu
-            id="rightClickMenu"
-            class="el-menu-vertical"
-            text-color="#000000"
-            active-text-color="#000000"
-            @select="handleRightSelect"
-          >
-            <el-menu-item index="1" class="menuItem">
-              <span slot="title">添加分类</span>
-            </el-menu-item>
-            <el-menu-item index="2" class="menuItem">
-              <span slot="title">修改分类</span>
-            </el-menu-item>
-            <el-menu-item index="3" class="menuItem">
-              <span slot="title">删除分类</span>
-            </el-menu-item>
-          </el-menu>
-        </div>
-      </el-aside>
       <el-main>
         <el-header style="height:30% width: 100%">
-          <el-row style="height:50px">
-            字典名称：
-            <el-input size="mini" style="width: 140px" />&nbsp;
-            字典类型：
-            <el-input size="mini" style="width: 140px" />&nbsp;
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
+          <el-row>
+            <el-form :inline="true" style="float: left">
+              <el-form-item label="组织机构：" style="margin-right: 80px">
+                <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" size="mini" @click="queryDictionaryData">查询</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button size="mini">重置</el-button>
+              </el-form-item>
+            </el-form>
           </el-row>
           <el-row style="display: inline">
             <el-button type="success" size="mini">增加</el-button>
             <el-button type="danger" size="mini">删除</el-button>
-            <el-button type="primary" size="mini">修改</el-button>
+            <el-button type="warning" size="mini">修改</el-button>
             <el-button type="primary" size="mini">导入</el-button>
             <el-button type="primary" size="mini">导出</el-button>
           </el-row>
@@ -115,38 +57,14 @@ api.treelist = api.treelist.splice(0, 10)
 export default {
   name: 'Position',
   data() {
-    const item = {
-      tagID: 'ID001',
-      name: '地区',
-      description: '此处是改内容的详细描述...',
-      creatorID: 'Admin',
-      regeneratorID: 'Admin'
-    }
     return {
-      DATA: null,
-      NODE: null,
-      dialogNewFormVisible: false,
-      dialogFormVisible: false,
-      dialogClassifyVisible: false,
-      tableData: Array(10).fill(item),
-      maxexpandId: api.maxexpandId, // 新增节点开始id
-      non_maxexpandId: api.maxexpandId, // 新增节点开始id(不更改)
-      isLoadingTree: true, // 是否加载节点树
-      setTree: api.treelist, // 节点树数据
-      defaultProps: {
-        children: 'children',
-        label: 'name'
-      },
-      filterText: '',
-      input: '',
-      input2: '',
-      currentPage4: 4,
-      editObj: {},
-      menuVisible: false,
-      objectID: null,
-      // 分类修改*/
-      menuVisible2: false,
-      objectID2: null,
+      options: [{
+        value: 1,
+        label: '正常'
+      }, {
+        value: 0,
+        label: '禁用'
+      }],
       dictionaryData: [],
       show: true
     }
