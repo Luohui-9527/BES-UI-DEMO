@@ -182,10 +182,10 @@ export default {
       },
       //  批量选中data
       selectList: [],
-      addFormRules: {
-        dictionaryName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        dictionaryType: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
-        dictionaryValue: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
+      FormRules: {
+        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
+        value: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
         status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       },
       //  编辑界面是否显示
@@ -200,7 +200,7 @@ export default {
         dictionaryType: '',
         dictionaryValue: '',
         status: '',
-        comment: ''
+        remark: ''
       },
       //  分页
       totalPage: 1, //  统共页数，默认为1
@@ -223,16 +223,15 @@ export default {
     //  分页
     //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
     //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
-    // getCurrentPageData() {
+    //  getCurrentPageData() {
     //   let begin = (this.currentPage - 1) * this.pageSize
     //   let end = this.currentPage * this.pageSize
     //   var oldTable = this.tableData
     //   this.currentPageData = oldTable.slice(
-    //     begin,
-    //     end
-    //   )
+    //   begin,
+    //   end
+    // )
     // },
-    //  获取全部数据
     searchDic: function(name, type, mark) {
       var oldData = this.tableData
       var newDic = []
@@ -273,7 +272,6 @@ export default {
       }
       this.countSearchPages(newDic)
     },
-    // 获取
     getDictionary() {
       this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
         this.tableData = res.data

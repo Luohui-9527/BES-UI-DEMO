@@ -5,8 +5,8 @@
         <el-header style="height:30% width: 100%">
           <el-row>
             <el-form :inline="true" style="float: left">
-              <el-form-item label="组织机构：" style="margin-right: 80px">
-                <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+              <el-form-item label="组织机构：" style="margin-right: 50px">
+                <el-input v-model="organizationData.name" size="mini" style="width: 160px" placeholder="请输入" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" @click="queryDictionaryData">查询</el-button>
@@ -17,27 +17,25 @@
             </el-form>
           </el-row>
           <el-row style="display: inline">
-            <el-button type="success" size="mini">增加</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
-            <el-button type="warning" size="mini">修改</el-button>
-            <el-button type="primary" size="mini">导入</el-button>
-            <el-button type="primary" size="mini">导出</el-button>
+            <el-button type="success" size="mini" icon="el-icon-circle-plus-outline" @click="saveDialogVisible = true">增加</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteDialogVisible = true">删除</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-edit" @click="updateDialogVisible = true">修改</el-button>
           </el-row>
         </el-header>
         <el-main v-if="show">
-          <el-table :data="dictionaryData" border style="width: 100%" height="90%">
+          <el-table :data="organizationData" border style="width: 100%" height="90%">
             <el-table-column type="selection" width="35" />
-            <el-table-column prop="name" label="字典名" />
-            <el-table-column prop="category" label="字典类型" />
-            <el-table-column prop="value" label="更新时间" />
-            <el-table-column prop="category" label="备注" />
-            <el-table-column prop="remark" label="状态" />
+            <el-table-column prop="name" label="组织机构" />
+            <el-table-column prop="code" label="机构代码" />
+            <el-table-column prop="master" label="负责人" />
+            <el-table-column prop="tel" label="电话" />
+            <el-table-column prop="address" label="地址" />
+            <el-table-column prop="status" label="是否启用" />
             <el-table-column label="操作" width="210">
               <template>
-                <el-button type="primary" icon="el-icon-edit" size="mini" circle />
-                <el-button type="success" icon="el-icon-check" size="mini" circle />
-                <el-button type="warning" icon="el-icon-star-off" size="mini" circle />
-                <el-button type="danger" icon="el-icon-delete" size="mini" circle />
+                <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
+                <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
+                <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
               </template>
             </el-table-column>
           </el-table>
@@ -48,6 +46,99 @@
         </el-main>
       </el-main>
     </el-container>
+    <el-dialog :visible.sync="saveDialogVisible" title="新增组织机构" center width="500px">
+      <el-header style="height: 5px">
+        <i class="el-icon-user" style="float: left">组织机构基本信息</i>
+      </el-header>
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="saveForm" :model="saveForm" label-width="120px" size="mini" inline="true" :rules="FormRules">
+        <el-row>
+          <el-form-item label="组织机构名：" prop="name">
+            <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="机构代码：" prop="code">
+            <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="负责人：" prop="master">
+            <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="电话：" prop="tel">
+            <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="地址：" prop="address">
+            <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="是否启用：" prop="status">
+            <el-radio v-model="saveForm.status" label="1">是</el-radio>
+            <el-radio v-model="saveForm.status" label="0">否</el-radio>
+          </el-form-item>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="saveDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
+      <span>确定要删除该组织机构吗？</span>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
+        <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="updateDialogVisible" title="修改组织机构" center width="500px">
+      <el-header style="height: 5px">
+        <i class="el-icon-user" style="float: left">组织机构基本信息</i>
+      </el-header>
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="updateForm" :model="updateForm" label-width="120px" size="mini" inline="true" :rules="FormRules">
+        <el-row>
+          <el-form-item label="组织机构名：" prop="name">
+            <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="机构代码：" prop="code">
+            <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="负责人：" prop="master">
+            <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="电话：" prop="tel">
+            <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="地址：" prop="address">
+            <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="是否启用：" prop="status">
+            <el-radio v-model="updateForm.status" label="1">是</el-radio>
+            <el-radio v-model="updateForm.status" label="0">否</el-radio>
+          </el-form-item>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="saveDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -65,19 +156,70 @@ export default {
         value: 0,
         label: '禁用'
       }],
-      dictionaryData: [],
-      show: true
+      organizationData: [],
+      queryOrganizationData: {
+        name: ''
+      },
+      show: true,
+      FormRules: {
+        name: [{ required: true, message: '请输入组织机构名', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入机构代码', trigger: 'blur' }],
+        master: [{ required: true, message: '请输入负责人', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
+      },
+      saveForm: {
+        orgId: '',
+        name: '',
+        code: '',
+        master: '',
+        tel: '',
+        address: '',
+        status: ''
+      },
+      updateForm: {
+        orgId: '',
+        name: '',
+        code: '',
+        master: '',
+        tel: '',
+        address: '',
+        status: ''
+      },
+      saveDialogVisible: false,
+      deleteDialogVisible: false,
+      updateDialogVisible: false
     }
   },
   mounted() {
     this.dragControllerDiv()
-    this.getDictionary()
+    this.getCompany()
   },
   methods: {
-    getDictionary() {
-      this.$axios.get('http:// localhost:8080/dictionary/findAll').then(res => {
-        this.dictionaryData = res.data
-        console.log(this.getDictionaryData)
+    getOrganization() {
+      this.$axios.get('/organization/getOrganization').then(res => {
+        this.organizationData = res.data
+        console.log(this.companyData)
+      })
+    },
+    queryCompany() {
+      let commonRequest = {}
+      commonRequest = {
+        head: {
+          'version': '1',
+          'token': this.$store.state.user.token,
+          'businessType': '1',
+          'deviceId': '1',
+          'deviceType': '0',
+          'encrypt': 'false'
+        },
+        body: {
+          data: {
+            name: this.queryOrganizationData.name
+          }
+        }
+      }
+      this.$axios.get('/organization/queryOrganization', commonRequest).then(res => {
+        this.companyData = res.data
       })
     },
     handleRightSelect(key) {

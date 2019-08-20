@@ -28,6 +28,7 @@
           <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
         </el-row>
       </el-header>
+      <!-- 表格 -->
       <el-main v-if="show">
         <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" @selection-change="selectChange">
           <el-table-column type="selection" width="40%" />
@@ -88,20 +89,20 @@
     </el-dialog>
     <!-- 修改窗口 -->
     <el-dialog title="基本信息" width="400px" :visible.sync="editFormVisible" :close-on-click-modal="false">
-      <el-form ref="editForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
+      <el-form ref="editForm" :inline="true" :model="addForm" label-width="100px" :rules="FormRules">
         <el-row>
-          <el-form-item label="字典名" prop="dictionaryName">
-            <el-input v-model="editForm.dictionaryName" auto-complete="off" />
+          <el-form-item label="字典名" prop="name">
+            <el-input v-model="editForm.name" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典类型" prop="dictionaryType">
-            <el-input v-model="editForm.dictionaryType" auto-complete="off" />
+          <el-form-item label="字典类型" prop="category">
+            <el-input v-model="editForm.category" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典值" prop="dictionaryValue">
-            <el-input v-model="editForm.dictionaryValue" auto-complete="off" />
+          <el-form-item label="字典值" prop="value">
+            <el-input v-model="editForm.value" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -111,8 +112,8 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注信息" prop="comment">
-            <el-input v-model="editForm.comment" type="textarea" :rows="4" auto-complete="off" />
+          <el-form-item label="备注信息" prop="remark">
+            <el-input v-model="editForm.remark" type="textarea" :rows="3" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -183,11 +184,12 @@ export default {
       },
       //  批量选中data
       selectList: [],
-      addFormRules: {
-        dictionaryName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        dictionaryType: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
-        dictionaryValue: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
-        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
+      FormRules: {
+        name: [{ required: true, message: '请输入题目', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入题目类别', trigger: 'blur' }],
+        subjectType: [{ required: true, message: '请输入题目类型', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }],
+        difficulty: [{ required: true, message: '请选择难度', trigger: 'blur' }]
       },
       //  编辑界面是否显示
       editFormVisible: false,
@@ -198,17 +200,17 @@ export default {
       //  编辑界面数据
       editForm: {
         id: '',
-        dictionaryName: '',
-        dictionaryType: '',
-        dictionaryValue: '',
+        name: '',
+        category: '',
+        value: '',
         status: '',
-        comment: ''
+        remark: ''
       },
       //  分页
       totalPage: 1, //  统共页数，默认为1
       currentPage: 1, //  当前页数 ，默认为1
       pageSize: 7, //  每页显示数量
-      currentPageData: [{ remark: 444, name: 'sdahfsakfhaslfhlsahflashfklashsadasdasdsadasdsadsadasdasdasdsa' }, { remark: 455 }] //  当前页显示内容
+      currentPageData: [{ subjectId: 1, name: '下列选项中，请选择一个handssome英俊coolman，学习如何做一名优秀的组员balibalibalibalibalabala', subjectType: 1, category: 1, updatedTime: '2017-1-2 14:20:56', status: 1 }, { subjectId: 2, name: '下列选项中，请选择一个handssome英俊coolman，学习如何做一名优秀的组员balibalibalibalibalabala', subjectType: 2, category: 2, updatedTime: '2017-1-2 14:20:56', status: 1 }] //  当前页显示内容
     }
   },
   mounted() {
@@ -225,16 +227,15 @@ export default {
     //  分页
     //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
     //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
-    // getCurrentPageData() {
+    //  getCurrentPageData() {
     //   let begin = (this.currentPage - 1) * this.pageSize
     //   let end = this.currentPage * this.pageSize
     //   var oldTable = this.tableData
     //   this.currentPageData = oldTable.slice(
-    //     begin,
-    //     end
-    //   )
+    //   begin,
+    //   end
+    // )
     // },
-    //  获取全部数据
     searchDic: function(name, type, mark) {
       var oldData = this.tableData
       var newDic = []
@@ -275,7 +276,6 @@ export default {
       }
       this.countSearchPages(newDic)
     },
-    // 获取
     getDictionary() {
       this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
         this.tableData = res.data
