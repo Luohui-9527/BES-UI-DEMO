@@ -321,11 +321,7 @@ export default {
       updateDialogVisible: false
     }
   },
-<<<<<<< HEAD
   created() {
-=======
-  mounted() {
->>>>>>> e437073b84315c723cb2580b947dc1e487efdd77
     this.getCompany()
   },
   methods: {
