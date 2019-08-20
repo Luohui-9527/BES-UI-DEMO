@@ -52,20 +52,20 @@
     </el-container>
     <!-- 增加窗口 -->
     <el-dialog title="基本信息" width="500px" :visible.sync="addFormVisible" :close-on-click-modal="false">
-      <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
+      <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="FormRules">
         <el-row>
-          <el-form-item label="字典名" prop="dictionaryName">
-            <el-input v-model="addForm.dictionaryName" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典名" prop="name">
+            <el-input v-model="addForm.name" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典类型" prop="dictionaryType">
-            <el-input v-model="addForm.dictionaryType" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典类型" prop="type">
+            <el-input v-model="addForm.type" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典值" prop="dictionaryValue">
-            <el-input v-model="addForm.dictionaryValue" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典值" prop="value">
+            <el-input v-model="addForm.value" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -75,8 +75,8 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注信息" prop="comment">
-            <el-input v-model="addForm.comment" type="textarea" :rows="4" auto-complete="off" style="width: 300px" />
+          <el-form-item label="备注信息" prop="remark">
+            <el-input v-model="addForm.remark" type="textarea" :rows="4" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -87,20 +87,20 @@
     </el-dialog>
     <!-- 修改窗口 -->
     <el-dialog title="基本信息" width="500px" :visible.sync="editFormVisible" :close-on-click-modal="false">
-      <el-form ref="editForm" :inline="true" :model="editForm" label-width="100px" :rules="addFormRules">
+      <el-form ref="editForm" :inline="true" :model="editForm" label-width="100px" :rules="FormRules">
         <el-row>
-          <el-form-item label="字典名" prop="dictionaryName">
-            <el-input v-model="editForm.dictionaryName" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典名" prop="name">
+            <el-input v-model="editForm.name" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典类型" prop="dictionaryType">
-            <el-input v-model="editForm.dictionaryType" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典类型" prop="type">
+            <el-input v-model="editForm.type" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典值" prop="dictionaryValue">
-            <el-input v-model="editForm.dictionaryValue" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典值" prop="value">
+            <el-input v-model="editForm.value" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -110,8 +110,8 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注信息" prop="comment">
-            <el-input v-model="editForm.comment" type="textarea" :rows="4" auto-complete="off" style="width: 300px" />
+          <el-form-item label="备注信息" prop="remark">
+            <el-input v-model="editForm.remark" type="textarea" :rows="4" auto-complete="off" style="width: 300px" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -174,17 +174,17 @@ export default {
       addFormVisible: false,
       //  新增界面数据
       addForm: {
-        dictionaryName: '',
-        dictionaryType: '',
-        dictionaryValue: '',
+        name: '',
+        type: '',
+        value: '',
         status: '',
-        comment: ''
+        remark: ''
       },
       //  批量选中data
       selectList: [],
       FormRules: {
         name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        category: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
+        type: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
         value: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
         status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       },

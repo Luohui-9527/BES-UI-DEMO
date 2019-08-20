@@ -1,7 +1,73 @@
 <template>
   <div class="dashboard-container">
     <el-container style="height: 800px">
-      <el-header style="height:10%; width: 100%">
+       <!--el-aside为树的部分，不用可以删去-->
+      <el-aside width="180px">
+        <h3 class="el-icon-folder" style="margin: 0px">
+          组织机构
+          <i class="el-icon-plus" @click="saveDialogVisible = true" />
+          <i class="el-icon-refresh-left" />
+        </h3>
+        <el-tree
+          ref="SlotMenuList"
+          :data="setTree"
+          :props="defaultProps"
+          node-key="id"
+          :filter-node-method="filterNode"
+          style="margin-top:20px"
+          accordion
+          @node-contextmenu="rihgtClick"
+        >
+          <span slot-scope="{ node, data }" class="span-ellipsis">
+            <span v-show="!node.isEdit">
+              <span v-show="data.children && data.children.length >= 1">
+                <i
+                  :class="{ 'fa fa-plus-square': !node.expanded, 'fa fa-minus-square':node.expanded}"
+                />
+                <span :title="node.label">{{ node.label }}</span>
+              </span>
+              <span v-show="!data.children || data.children.length == 0">
+                <i class style="margin-right:10px" />
+                <span :title="node.label">{{ node.label }}</span>
+              </span>
+            </span>
+            <!-- 编辑输入框 -->
+            <span v-show="node.isEdit">
+              <el-input
+                :ref="'slotTreeInput'+data.id"
+                v-model="data.name"
+                class="slot-t-input"
+                size="mini"
+                autofocus
+                @blur.stop="NodeBlur(node, data)"
+                @keyup.enter.native="NodeBlur(node, data)"
+              />
+            </span>
+          </span>
+        </el-tree>
+        <!--鼠标右键点击出现页面-->
+        <div v-show="menuVisible">
+          <el-menu
+            id="rightClickMenu"
+            class="el-menu-vertical"
+            text-color="#000000"
+            active-text-color="#000000"
+            @select="handleRightSelect"
+          >
+            <el-menu-item index="1" class="menuItem">
+              <span slot="title">添加分类</span>
+            </el-menu-item>
+            <el-menu-item index="2" class="menuItem">
+              <span slot="title">修改分类</span>
+            </el-menu-item>
+            <el-menu-item index="3" class="menuItem">
+              <span slot="title">删除分类</span>
+            </el-menu-item>
+          </el-menu>
+        </div>
+      </el-aside>
+      <el-main>
+        <el-header style="height:10%; width: 100%">
         <!-- 表头 -->
         <el-row>
           <el-form :inline="true" style="float: left" :model="filters">
@@ -43,6 +109,7 @@
             :total="50"
           />
         </div>
+      </el-main>
       </el-main>
     </el-container>
     <el-dialog title="新增" width="20%" :visible.sync="addFormVisible" :close-on-click-modal="false">
