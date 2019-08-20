@@ -2,30 +2,46 @@
   <div class="dashboard-container">
     <el-container style="height: 800px">
       <el-header style="height:100px; width: 100%">
-        <el-row style="display: inline">
-          批阅状态:
-          <el-select v-model="value" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
+        <el-form :model="form" :inline="true">
+          <el-form-item label="批阅状态">
+            <el-select
+              v-model="form.value"
               size="mini"
-              :label="item.label"
-              :value="item.value"
-              style="width: 10%"
+              style="width: 100px"
+              clearable
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in form.options"
+                :key="item.value"
+                size="mini"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="交卷时间段">
+            <el-date-picker
+              v-model="endTimeRange"
+              size="mini"
+              type="datetimerange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
             />
-          </el-select>&nbsp;&nbsp;&nbsp;&nbsp;交卷时间段:
-          <el-date-picker
-            v-model="time"
-            type="datetimerange"
-            style="width: 33%"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          />&nbsp;&nbsp;&nbsp;&nbsp;考试标题:
-          <el-input placeholder="考试标题" style="width: 10%" />&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-button type="primary" icon="el-icon-search" @click="getDictionary">查询</el-button>
-        </el-row>
-        <div style="margin-top:20px">
+          </el-form-item>
+          <el-form-item label="考试标题">
+            <el-input v-model="title" size="mini" placeholder="考试标题" />
+          </el-form-item>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            size="mini"
+            style="margin-top: 5px"
+            @click="submit"
+          >查询</el-button>
+        </el-form>
+        <div>
           <el-button type="primary" size="mini">
             <i class="el-icon-notebook-1" />阅卷
           </el-button>
@@ -34,17 +50,17 @@
       <el-main>
         <el-table :data="tableData" border style="width: 100%" height="90%">
           <el-table-column type="selection" width="35" />
-          <el-table-column prop="name" label="试卷" />
-          <el-table-column prop="category" label="场次" />
-          <el-table-column prop="value" label="发布日期" />
-          <el-table-column prop="category" label="答卷人手机号" />
-          <el-table-column prop="remark" label="答卷人" />
-          <el-table-column prop="remark" label="交卷时间" />
-          <el-table-column prop="remark" label="阅卷终止时间" />
-          <el-table-column prop="remark" label="客观题" />
-          <el-table-column prop="remark" label="主观题" />
-          <el-table-column prop="remark" label="系统评价" />
-          <el-table-column prop="remark" label="状态" />
+          <el-table-column prop="paper" label="试卷" />
+          <el-table-column prop="examSession" label="场次" />
+          <el-table-column prop="publishDate" label="发布日期" />
+          <el-table-column prop="tel" label="答卷人手机号" />
+          <el-table-column prop="examiner" label="答卷人" />
+          <el-table-column prop="actualEndTime" label="交卷时间" />
+          <el-table-column prop="markingStopTime" label="阅卷终止时间" />
+          <el-table-column prop="objectiveSubjectScore" label="客观题" />
+          <el-table-column prop="subjectvieSubjectScore" label="主观题" />
+          <el-table-column prop="systemEvaluate" label="系统评价" />
+          <el-table-column prop="status" label="状态" />
           <el-table-column label="操作">
             <el-button type="primary" icon="el-icon-notebook-1" size="mini" circle />
           </el-table-column>
@@ -63,19 +79,24 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [{ remark: 444 }],
-      time: ''
+      tableData: [{ paper: 'java', examSession: '12334', publishDate: new Date().toLocaleString(), tel: '1312312344', examiner: 'syt', actualEndTime: new Date().toLocaleString(), markingStopTime: new Date().toLocaleString(), objectiveSubjectScore: 50, subjectvieSubjectScore: 50, systemEvaluate: 'good', status: 1 }],
+      form: {
+        options: [{
+          value: '选项1',
+          label: '1'
+        },
+        {
+          value: '选项2',
+          label: '2'
+        }],
+        endTimeRange: [],
+        title: ''
+      }
     }
   },
-  mounted() {
-    this.getDictionary()
-  },
   methods: {
-    getDictionary() {
-      this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
-        this.tableData = res.data
-        console.log(this.getDictionaryData)
-      })
+    submit() {
+
     }
   }
 }
