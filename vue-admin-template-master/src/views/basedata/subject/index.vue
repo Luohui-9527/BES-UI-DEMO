@@ -203,7 +203,7 @@ export default {
         dictionaryType: '',
         mark: ''
       },
-      subjectData: [],
+      subject: [],
       //  列表Loading加载
       listLoading: false,
       //  添加按钮Loading加载

@@ -126,6 +126,30 @@ export default {
   name: 'Position',
   data() {
     return {
+      // options之上都为树要用的类，不用树可以删去
+      DATA: null,
+      NODE: null,
+      dialogNewFormVisible: false,
+      dialogFormVisible: false,
+      dialogClassifyVisible: false,
+      maxexpandId: api.maxexpandId, // 新增节点开始id
+      non_maxexpandId: api.maxexpandId, // 新增节点开始id(不更改)
+      isLoadingTree: true, // 是否加载节点树
+      setTree: api.treelist, // 节点树数据
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
+      filterText: '',
+      input: '',
+      input2: '',
+      currentPage4: 4,
+      editObj: {},
+      menuVisible: false,
+      objectID: null,
+      // 分类修改*/
+      menuVisible2: false,
+      objectID2: null,
       // 导入窗口显示
       importFormVisible: false,
       // 文件上传List
