@@ -1,106 +1,26 @@
-import request from '@/utils/request'
+import { commonRequestUtil, userRequestApi } from '@/utils/requestUtils'
 
 export function save(data) {
-  const commonResquest = {
-    head: {
-      'version': '1',
-      'token': this.$store.state.user.token,
-      'businessType': '1',
-      'deviceId': '1',
-      'deviceType': '0',
-      'encrypt': 'false'
-    },
-    body: {
-      data
-    }
-  }
-  return request({
-    url: '/company/saveCompany',
-    method: 'post',
-    data: commonResquest
-  })
+  const commonResquest = commonRequestUtil(data)
+  return userRequestApi('/company/saveCompany', 'post', commonResquest)
 }
 
 export function del(data) {
-  const commonResquest = {
-    head: {
-      'version': '1',
-      'token': this.$store.state.user.token,
-      'businessType': '1',
-      'deviceId': '1',
-      'deviceType': '0',
-      'encrypt': 'false'
-    },
-    body: {
-      data
-    }
-  }
-  return request({
-    url: '/company/deleteCompany',
-    method: 'post',
-    data: commonResquest
-  })
+  const commonResquest = commonRequestUtil(data)
+  return userRequestApi('/company/deleteCompany', 'delete', commonResquest)
 }
 
 export function update(data) {
-  const commonResquest = {
-    head: {
-      'version': '1',
-      'token': this.$store.state.user.token,
-      'businessType': '1',
-      'deviceId': '1',
-      'deviceType': '0',
-      'encrypt': 'false'
-    },
-    body: {
-      data
-    }
-  }
-  return request({
-    url: '/company/updateCompany',
-    method: 'post',
-    data: commonResquest
-  })
+  const commonResquest = commonRequestUtil(data)
+  return userRequestApi('/company/updateCompany', 'put', commonResquest)
 }
 
 export function query(data) {
-  const commonResquest = {
-    head: {
-      'version': '1',
-      'token': this.$store.state.user.token,
-      'businessType': '1',
-      'deviceId': '1',
-      'deviceType': '0',
-      'encrypt': 'false'
-    },
-    body: {
-      data
-    }
-  }
-  return request({
-    url: '/company/queryCompany',
-    method: 'post',
-    data: commonResquest
-  })
+  const commonResquest = commonRequestUtil(data)
+  return userRequestApi('/company/deleteCompany', 'post', commonResquest)
 }
 
-export function getInfo() {
-  const commonResquest = {
-    head: {
-      'version': '1',
-      'token': this.$store.state.user.token,
-      'businessType': '1',
-      'deviceId': '1',
-      'deviceType': '0',
-      'encrypt': 'false'
-    },
-    body: {
-      data: {}
-    }
-  }
-  return request({
-    url: '/company/getCompanyInfo',
-    method: 'post',
-    data: commonResquest
-  })
+export function getData() {
+  const commonResquest = commonRequestUtil()
+  return userRequestApi('/company/getCompanyInfo', 'post', commonResquest)
 }
