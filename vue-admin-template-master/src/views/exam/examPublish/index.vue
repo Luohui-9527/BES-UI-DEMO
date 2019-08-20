@@ -65,7 +65,7 @@
           <el-table-column prop="title" label="考试标题" />
           <el-table-column prop="descript" label="考试说明" />
           <el-table-column prop="status" label="状态列" />
-          <el-table-column prop="publishTime" label="发布次数" />
+          <el-table-column prop="publishTimes" label="发布次数" />
           <el-table-column label="操作" width="150px">
             <el-button
               type="primary"
@@ -162,7 +162,7 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [{ publisher: 'syt', publishTimeRange: new Date().toLocaleString(), endTime: new Date().toLocaleString(), planPepoleNum: 5, limitTime: 50, examiner: 'syt', title: 'java', descript: 'hhhh', status: '1', publishTime: new Date().toLocaleString() }],
+      tableData: [{ publisher: 'syt', publishTimeRange: new Date().toLocaleString(), endTime: new Date().toLocaleString(), planPepoleNum: 5, limitTime: 50, examiner: 'syt', title: 'java', descript: 'hhhh', status: '启用', publishTimes: 3 }],
       dialogFormVisible: false,
       visible: false,
       form: {

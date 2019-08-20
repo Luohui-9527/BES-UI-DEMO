@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="交卷时间段">
             <el-date-picker
-              v-model="endTimeRange"
+              v-model="form.endTimeRange"
               size="mini"
               type="datetimerange"
               range-separator="~"
@@ -31,7 +31,7 @@
             />
           </el-form-item>
           <el-form-item label="考试标题">
-            <el-input v-model="title" size="mini" placeholder="考试标题" />
+            <el-input v-model="form.title" size="mini" placeholder="考试标题" />
           </el-form-item>
           <el-button
             type="primary"
@@ -79,15 +79,15 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [{ paper: 'java', examSession: '12334', publishDate: new Date().toLocaleString(), tel: '1312312344', examiner: 'syt', actualEndTime: new Date().toLocaleString(), markingStopTime: new Date().toLocaleString(), objectiveSubjectScore: 50, subjectvieSubjectScore: 50, systemEvaluate: 'good', status: 1 }],
+      tableData: [{ paper: 'java', examSession: '12334', publishDate: new Date().toLocaleString(), tel: '1312312344', examiner: 'syt', actualEndTime: new Date().toLocaleString(), markingStopTime: new Date().toLocaleString(), objectiveSubjectScore: 50, subjectvieSubjectScore: 50, systemEvaluate: 'good', status: '已批阅' }],
       form: {
         options: [{
           value: '选项1',
-          label: '1'
+          label: '已批阅'
         },
         {
           value: '选项2',
-          label: '2'
+          label: '未批阅'
         }],
         endTimeRange: [],
         title: ''
