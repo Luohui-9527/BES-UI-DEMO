@@ -3,10 +3,18 @@
     <el-container style="height: 800px">
       <el-header style="height:10%; width: 100%">
         <!-- 表头 -->
-        <el-row style="height:50%">
-          字典名称：<el-input size="mini" style="width: 10%" />&nbsp;
-          字典类型：<el-input size="mini" style="width: 10%" />&nbsp;
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
+        <el-row>
+          <el-form :inline="true" style="float: left">
+            <el-form-item label="字典名称：">
+              <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+            </el-form-item>
+            <el-form-item label="字典类型：">
+              <el-input v-model="dictionaryData.status" placeholder="请输入" style="width: 130px" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="queryDictionaryData">查询</el-button>
+            </el-form-item>
+          </el-form>
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
@@ -75,8 +83,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addFormVisible = false">取消</el-button>
         <el-button type="primary" :loading="addLoading" @click="addSubmit">提交</el-button>
+        <el-button @click="addFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
     <!-- 修改窗口 -->
@@ -110,8 +118,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editFormVisible = false">取消</el-button>
         <el-button type="primary" :loading="editLoading" @click="editSubmit">提交</el-button>
+        <el-button @click="editFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
     <!--导入窗口-->
@@ -158,6 +166,7 @@ export default {
         dictionaryType: '',
         mark: ''
       },
+      dictionaryData: [],
       //  列表Loading加载
       listLoading: false,
       //  添加按钮Loading加载
