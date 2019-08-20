@@ -3,10 +3,18 @@
     <el-container style="height: 800px">
       <el-header style="height:10%; width: 100%">
         <!-- 表头 -->
-        <el-row style="height:50%">
-          字典名称：<el-input size="mini" style="width: 10%" />&nbsp;
-          字典类型：<el-input size="mini" style="width: 10%" />&nbsp;
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
+        <el-row>
+          <el-form :inline="true" style="float: left">
+            <el-form-item label="字典名称：">
+              <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+            </el-form-item>
+            <el-form-item label="字典类型：">
+              <el-input v-model="dictionaryData.status" placeholder="请输入" style="width: 130px" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="queryDictionaryData">查询</el-button>
+            </el-form-item>
+          </el-form>
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
@@ -49,17 +57,17 @@
       <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
         <el-row>
           <el-form-item label="字典名" prop="dictionaryName">
-            <el-input v-model="addForm.dictionaryName" auto-complete="off" />
+            <el-input v-model="addForm.name" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="字典类型" prop="dictionaryType">
-            <el-input v-model="addForm.dictionaryType" auto-complete="off" />
+            <el-input v-model="addForm.category" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="字典值" prop="dictionaryValue">
-            <el-input v-model="addForm.dictionaryValue" auto-complete="off" />
+            <el-input v-model="addForm.value" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -70,13 +78,13 @@
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="comment">
-            <el-input v-model="addForm.comment" type="textarea" :rows="4" auto-complete="off" />
+            <el-input v-model="addForm.remark" type="textarea" :rows="4" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addFormVisible = false">取消</el-button>
         <el-button type="primary" :loading="addLoading" @click="addSubmit">提交</el-button>
+        <el-button @click="addFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
     <!-- 修改窗口 -->
@@ -84,12 +92,12 @@
       <el-form ref="editForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
         <el-row>
           <el-form-item label="字典名" prop="dictionaryName">
-            <el-input v-model="editForm.dictionaryName" auto-complete="off" />
+            <el-input v-model="editForm.name" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="字典类型" prop="dictionaryType">
-            <el-input v-model="editForm.dictionaryType" auto-complete="off" />
+            <el-input v-model="editForm.category" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -110,8 +118,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editFormVisible = false">取消</el-button>
         <el-button type="primary" :loading="editLoading" @click="editSubmit">提交</el-button>
+        <el-button @click="editFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
     <!--导入窗口-->
@@ -133,8 +141,8 @@
         </el-upload>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="importFormVisible = false">取消</el-button>
         <el-button type="primary" :loading="importLoading" @click="importSubmit">提交</el-button>
+        <el-button @click="importFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -158,6 +166,7 @@ export default {
         dictionaryType: '',
         mark: ''
       },
+      dictionaryData: [],
       //  列表Loading加载
       listLoading: false,
       //  添加按钮Loading加载
@@ -200,7 +209,7 @@ export default {
       totalPage: 1, //  统共页数，默认为1
       currentPage: 1, //  当前页数 ，默认为1
       pageSize: 7, //  每页显示数量
-      currentPageData: [{ remark: 444 }, { remark: 455 }] //  当前页显示内容
+      currentPageData: [{ id: 1, name: 1, category: 1, value: 1, updatedTime: '2017-1-2 14:20:56', status: 1, remark: 1 }, { id: 2, name: 2, category: 2, value: 2, updatedTime: '2017-1-2 14:20:56', status: 2, remark: 2 }] //  当前页显示内容
     }
   },
   mounted() {
@@ -218,15 +227,14 @@ export default {
     //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
     //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
     // getCurrentPageData() {
-    //   let begin = (this.currentPage - 1) * this.pageSize
-    //   let end = this.currentPage * this.pageSize
-    //   var oldTable = this.tableData
-    //   this.currentPageData = oldTable.slice(
-    //     begin,
-    //     end
-    //   )
+    // let begin = (this.currentPage - 1) * this.pageSize
+    // let end = this.currentPage * this.pageSize
+    // var oldTable = this.tableData
+    // this.currentPageData = oldTable.slice(
+    //   begin,
+    //   end
+    // )
     // },
-    //  获取全部数据
     searchDic: function(name, type, mark) {
       var oldData = this.tableData
       var newDic = []
@@ -267,7 +275,6 @@ export default {
       }
       this.countSearchPages(newDic)
     },
-    // 获取
     getDictionary() {
       this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
         this.tableData = res.data
