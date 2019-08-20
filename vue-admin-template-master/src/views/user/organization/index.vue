@@ -5,8 +5,8 @@
         <el-header style="height:30% width: 100%">
           <el-row>
             <el-form :inline="true" style="float: left">
-              <el-form-item label="组织机构：" style="margin-right: 80px">
-                <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+              <el-form-item label="组织机构：" style="margin-right: 50px">
+                <el-input v-model="dictionaryData.name" size="mini" style="width: 160px" placeholder="请输入" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" @click="queryDictionaryData">查询</el-button>
@@ -17,11 +17,9 @@
             </el-form>
           </el-row>
           <el-row style="display: inline">
-            <el-button type="success" size="mini">增加</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
-            <el-button type="warning" size="mini">修改</el-button>
-            <el-button type="primary" size="mini">导入</el-button>
-            <el-button type="primary" size="mini">导出</el-button>
+            <el-button type="success" size="mini" icon="el-icon-circle-plus-outline" @click="saveDialogVisible = true">增加</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteDialogVisible = true">删除</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-edit" @click="updateDialogVisible = true">修改</el-button>
           </el-row>
         </el-header>
         <el-main v-if="show">
