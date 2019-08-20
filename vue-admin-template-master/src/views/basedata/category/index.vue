@@ -2,21 +2,27 @@
   <div class="dashboard-container">
     <el-container style="height: 800px">
       <el-header style="height:10%; width: 100%">
-        <el-row style="height:50%">
-          题目类别：<el-input size="mini" style="width: 10%" />&nbsp;
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
+        <!-- 表头 -->
+        <el-row>
+          <el-form :inline="true" style="float: left" :model="filters">
+            <el-form-item label="组卷配置项标题：">
+              <el-input v-model="filters.name" style="width: 130px" placeholder="请输入" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="searchDic(filters.name)">查询</el-button>
+            </el-form-item>
+          </el-form>
         </el-row>
+        <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">增加</el-button>
-          <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-edit">修改</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-upload">导入</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
+          <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit">修改</el-button>
         </el-row>
       </el-header>
       <el-main v-if="show">
         <el-table :data="tableData" border style="width: 100%" height="90%">
-          <el-table-column type="selection" width="30%" />
+          <el-table-column type="selection" width="40%" />
           <el-table-column prop="name" label="题目类别" />
           <el-table-column prop="category" label="备注" />
           <el-table-column prop="value" label="更新时间" />
@@ -84,6 +90,7 @@ export default {
       tableData: [{ remark: 444 }],
       show: true,
       addFormVisible: false,
+      filters: { name: '' },
       //  新增界面数据
       addForm: {
         dictionaryName: '',
