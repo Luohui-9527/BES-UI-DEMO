@@ -274,17 +274,16 @@ export default {
         orgName: ''
       },
       FormRules: {
-        companyId: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        mnemonicCode: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        master: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        tax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        fax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        orgName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        website: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        status: [{ required: true, message: '请输入字典名', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入公司名', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入公司编号', trigger: 'blur' }],
+        mnemonicCode: [{ required: true, message: '请输入助记码', trigger: 'blur' }],
+        master: [{ required: true, message: '请输入法人', trigger: 'blur' }],
+        tax: [{ required: true, message: '请输入税号', trigger: 'blur' }],
+        fax: [{ required: true, message: '请输入传真', trigger: 'blur' }],
+        orgName: [{ required: true, message: '请输入所属机构名', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        website: [{ required: true, message: '请输入网址', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       },
       saveForm: {
         companyId: '',
@@ -322,7 +321,6 @@ export default {
     }
   },
   mounted() {
-    this.dragControllerDiv()
     this.getCompany()
   },
   methods: {

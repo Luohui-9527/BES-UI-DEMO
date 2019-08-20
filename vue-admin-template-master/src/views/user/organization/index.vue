@@ -50,35 +50,35 @@
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">组织机构基本信息</i>
       </el-header>
-      <el-divider style="margin-top:10px" />
-      <el-form ref="saveForm" label-position="left" :model="saveForm" label-width="120px" size="mini" inline="true">
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="saveForm" :model="saveForm" label-width="120px" size="mini" inline="true" :rules="FormRules">
         <el-row>
-          <el-form-item required="true" label="组织机构名：">
-            <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="组织机构名：" prop="name">
+            <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item required="true" label="机构代码：">
-            <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="机构代码：" prop="code">
+            <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item required="true" label="负责人：">
-            <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="负责人：" prop="master">
+            <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="电话：">
-            <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="电话：" prop="tel">
+            <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="地址：">
-            <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="地址：" prop="address">
+            <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item required="true" label="是否启用：">
+          <el-form-item label="是否启用：" prop="status">
             <el-radio v-model="saveForm.status" label="1">是</el-radio>
             <el-radio v-model="saveForm.status" label="0">否</el-radio>
           </el-form-item>
@@ -100,35 +100,35 @@
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">组织机构基本信息</i>
       </el-header>
-      <el-divider style="margin-top:10px" />
-      <el-form ref="updateForm" label-position="left" :model="updateForm" label-width="120px" size="mini" inline="true">
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="updateForm" :model="updateForm" label-width="120px" size="mini" inline="true" :rules="FormRules">
         <el-row>
-          <el-form-item required="true" label="组织机构名：">
-            <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="组织机构名：" prop="name">
+            <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item required="true" label="机构代码：">
-            <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="机构代码：" prop="code">
+            <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item required="true" label="负责人：">
-            <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="负责人：" prop="master">
+            <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="电话：">
-            <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="电话：" prop="tel">
+            <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="地址：">
-            <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" prop="insitution" />
+          <el-form-item label="地址：" prop="address">
+            <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item required="true" label="是否启用：">
+          <el-form-item label="是否启用：" prop="status">
             <el-radio v-model="updateForm.status" label="1">是</el-radio>
             <el-radio v-model="updateForm.status" label="0">否</el-radio>
           </el-form-item>
@@ -157,7 +157,16 @@ export default {
         label: '禁用'
       }],
       organizationData: [],
+      queryOrganizationData: {
+        name: ''
+      },
       show: true,
+      FormRules: {
+        name: [{ required: true, message: '请输入组织机构名', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入机构代码', trigger: 'blur' }],
+        master: [{ required: true, message: '请输入负责人', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
+      },
       saveForm: {
         orgId: '',
         name: '',
@@ -183,13 +192,34 @@ export default {
   },
   mounted() {
     this.dragControllerDiv()
-    this.getDictionary()
+    this.getCompany()
   },
   methods: {
-    getDictionary() {
-      this.$axios.get('http:// localhost:8080/dictionary/findAll').then(res => {
-        this.dictionaryData = res.data
-        console.log(this.getDictionaryData)
+    getOrganization() {
+      this.$axios.get('/organization/getOrganization').then(res => {
+        this.organizationData = res.data
+        console.log(this.companyData)
+      })
+    },
+    queryCompany() {
+      let commonRequest = {}
+      commonRequest = {
+        head: {
+          'version': '1',
+          'token': this.$store.state.user.token,
+          'businessType': '1',
+          'deviceId': '1',
+          'deviceType': '0',
+          'encrypt': 'false'
+        },
+        body: {
+          data: {
+            name: this.queryOrganizationData.name
+          }
+        }
+      }
+      this.$axios.get('/organization/queryOrganization', commonRequest).then(res => {
+        this.companyData = res.data
       })
     },
     handleRightSelect(key) {
