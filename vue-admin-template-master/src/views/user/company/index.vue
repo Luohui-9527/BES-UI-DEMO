@@ -172,7 +172,7 @@
       </span>
     </el-dialog>
     <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
-      <span>确定要删除公司的基本信息吗</span>
+      <span>确定要删除公司的基本信息吗？</span>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
         <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>

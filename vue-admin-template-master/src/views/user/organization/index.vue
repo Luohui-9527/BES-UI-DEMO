@@ -6,7 +6,7 @@
           <el-row>
             <el-form :inline="true" style="float: left">
               <el-form-item label="组织机构：" style="margin-right: 80px">
-                <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+                <el-input v-model="dictionaryData.name" size="mini" style="width: 160px" placeholder="请输入" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" @click="queryDictionaryData">查询</el-button>
