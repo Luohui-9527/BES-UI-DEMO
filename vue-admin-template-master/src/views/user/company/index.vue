@@ -169,14 +169,14 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" type="primary" @click="updateCompanyData(updateForm)">确 定</el-button>
         <el-button size="mini" @click="saveDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
     <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
       <span>确定要删除公司的基本信息吗？</span>
       <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
+        <el-button size="mini" type="primary" @click="delCompanyData(deleteData.categoryId)">确 定</el-button>
         <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -222,7 +222,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" type="primary" @click="updateCompanyData(updateForm)">确 定</el-button>
         <el-button size="mini" @click="updateDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
@@ -231,6 +231,7 @@
 
 <script>
 import api from '@/resource/api'
+import { save, del, update, query, getInfo } from '@/api/user/company'
 api.treelist = api.treelist.splice(0, 10)
 export default {
   name: 'Position',
@@ -269,10 +270,6 @@ export default {
       }],
       companyData: [],
       show: true,
-      queryCompanyData: {
-        name: '',
-        orgName: ''
-      },
       FormRules: {
         companyId: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
         name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
@@ -301,6 +298,9 @@ export default {
         website: '',
         status: ''
       },
+      deleteData: {
+        companyId: ''
+      },
       updateForm: {
         companyId: '',
         name: '',
@@ -316,6 +316,10 @@ export default {
         website: '',
         status: ''
       },
+      queryCompanyData: {
+        name: '',
+        orgName: ''
+      },
       saveDialogVisible: false,
       deleteDialogVisible: false,
       updateDialogVisible: false
@@ -327,33 +331,45 @@ export default {
   },
   methods: {
     getCompany() {
-      this.$axios.get('/company/getCompany').then(res => {
+      getInfo().then(res => {
         this.companyData = res.data
         for (let i = 0; i < this.companyData.length; i++) {
           this.options.add(this.company.orgName, i + 1)
         }
-        console.log(this.companyData)
+      })
+    },
+    saveCompany() {
+      save(this.saveForm).then(res => {
+        this.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        this.saveDialogVisible = false
+        this.getCompany()
+      })
+    },
+    deleteCompany() {
+      del(this.deleteData).then(res => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.delDialogVisible = false
+        this.getCompany()
+      })
+    },
+    updateCompany() {
+      update(this.updateForm).then(res => {
+        this.$message({
+          message: '修改成功',
+          type: 'success'
+        })
+        this.updateDialogVisible = false
+        this.getCompany()
       })
     },
     queryCompany() {
-      let commonRequest = {}
-      commonRequest = {
-        head: {
-          'version': '1',
-          'token': this.$store.state.user.token,
-          'businessType': '1',
-          'deviceId': '1',
-          'deviceType': '0',
-          'encrypt': 'false'
-        },
-        body: {
-          data: {
-            name: this.queryCompanyData.name,
-            orgName: this.queryCompanyData.orgName
-          }
-        }
-      }
-      this.$axios.get('/company/queryCompany', commonRequest).then(res => {
+      query(this.queryCompanyData).then(res => {
         this.companyData = res.data
       })
     },
