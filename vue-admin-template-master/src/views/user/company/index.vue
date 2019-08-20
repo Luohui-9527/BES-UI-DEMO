@@ -96,7 +96,7 @@
           </el-row>
         </el-header>
         <el-main v-if="show">
-          <el-table :data="companyData" border style="width: 100%" stripe="true" height="90%">
+          <el-table :data="companyData" border style="width: 100%" stripe="true" height="400px">
             <el-table-column type="selection" width="35" />
             <el-table-column prop="name" label="公司名" align="center" />
             <el-table-column prop="code" label="公司编号" align="center" />
@@ -111,7 +111,7 @@
             <el-table-column prop="status" label="是否启用" align="center" />
             <el-table-column label="操作" width="210" align="center">
               <template>
-                <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
+                <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="saveDialogVisible = true" />
                 <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
                 <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
               </template>
@@ -166,14 +166,14 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="updateCompanyData(updateForm)">确 定</el-button>
+        <el-button size="mini" type="primary" @click="updateCompany(updateForm)">确 定</el-button>
         <el-button size="mini" @click="saveDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
     <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
       <span>确定要删除公司的基本信息吗？</span>
       <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="delCompanyData(deleteData.categoryId)">确 定</el-button>
+        <el-button size="mini" type="primary" @click="delCompany(deleteData.categoryId)">确 定</el-button>
         <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -219,7 +219,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="updateCompanyData(updateForm)">确 定</el-button>
+        <el-button size="mini" type="primary" @click="updateCompany(updateForm)">确 定</el-button>
         <el-button size="mini" @click="updateDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
@@ -228,7 +228,7 @@
 
 <script>
 import api from '@/resource/api'
-import { save, del, update, query, getInfo } from '@/api/user/company'
+import { save, del, update, query, getData } from '@/api/user/company.js'
 api.treelist = api.treelist.splice(0, 10)
 export default {
   name: 'Position',
@@ -321,12 +321,16 @@ export default {
       updateDialogVisible: false
     }
   },
+<<<<<<< HEAD
+  created() {
+=======
   mounted() {
+>>>>>>> e437073b84315c723cb2580b947dc1e487efdd77
     this.getCompany()
   },
   methods: {
     getCompany() {
-      getInfo().then(res => {
+      getData().then(res => {
         this.companyData = res.data
         for (let i = 0; i < this.companyData.length; i++) {
           this.options.add(this.company.orgName, i + 1)

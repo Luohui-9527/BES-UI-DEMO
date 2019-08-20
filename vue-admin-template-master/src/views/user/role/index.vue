@@ -113,6 +113,98 @@
         </el-main>
       </el-main>
     </el-container>
+    <el-dialog :visible.sync="userDialogVisible" title="用户分配" center>
+      <el-table :data="userData" border style="width: 100%" stripe="true" height="90%">
+        <el-table-column type="selection" width="35" />
+        <el-table-column prop="code" label="用户工号" align="center" />
+        <el-table-column prop="password" label="初始密码" align="center" />
+        <el-table-column prop="name" label="名字" align="center" />
+        <el-table-column prop="roleName" label="角色" align="center" />
+        <el-table-column prop="sex" label="性别" align="center" />
+        <el-table-column prop="birthday" label="生日" align="center" />
+        <el-table-column prop="positionName" label="职位" align="center" />
+        <el-table-column prop="tel" label="电话" align="center" />
+        <el-table-column prop="email" label="邮箱" align="center" />
+        <el-table-column prop="other" label="其他/微信" align="center" />
+        <el-table-column prop="remark" label="备注" align="center" />
+        <el-table-column prop="status" label="是否启用" align="center" />
+        <el-table-column label="操作" width="210" align="center">
+          <template>
+            <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
+            <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
+            <el-button type="success" size="mini" icon="el-icon-user" @click="roleDialogVisible = true" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="userDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog :visible.sync="manageDialogVisible" title="资源分配" center width="400px">
+      <el-tree
+        ref="SlotMenuList"
+        :data="setTree"
+        :props="defaultProps"
+        node-key="id"
+        :filter-node-method="filterNode"
+        style="margin-top:20px"
+        accordion
+        @node-contextmenu="rihgtClick"
+      >
+        <span slot-scope="{ node, data }" class="span-ellipsis">
+          <span v-show="!node.isEdit">
+            <span v-show="data.children && data.children.length >= 1">
+              <i
+                :class="{ 'fa fa-plus-square': !node.expanded, 'fa fa-minus-square':node.expanded}"
+              />
+              <span :title="node.label">{{ node.label }}</span>
+            </span>
+            <span v-show="!data.children || data.children.length == 0">
+              <i class style="margin-right:10px" />
+              <span :title="node.label">{{ node.label }}</span>
+            </span>
+          </span>
+          <!-- 编辑输入框 -->
+          <span v-show="node.isEdit">
+            <el-input
+              :ref="'slotTreeInput'+data.id"
+              v-model="data.name"
+              class="slot-t-input"
+              size="mini"
+              autofocus
+              @blur.stop="NodeBlur(node, data)"
+              @keyup.enter.native="NodeBlur(node, data)"
+            />
+          </span>
+        </span>
+      </el-tree>
+      <!--鼠标右键点击出现页面-->
+      <div v-show="menuVisible">
+        <el-menu
+          id="rightClickMenu"
+          class="el-menu-vertical"
+          text-color="#000000"
+          active-text-color="#000000"
+          @select="handleRightSelect"
+        >
+          <el-menu-item index="1" class="menuItem">
+            <span slot="title">添加分类</span>
+          </el-menu-item>
+          <el-menu-item index="2" class="menuItem">
+            <span slot="title">修改分类</span>
+          </el-menu-item>
+          <el-menu-item index="3" class="menuItem">
+            <span slot="title">删除分类</span>
+          </el-menu-item>
+        </el-menu>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="manageDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
     <el-dialog :visible.sync="saveDialogVisible" title="新增角色" center width="600px">
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">角色基本信息</i>
@@ -252,6 +344,7 @@ export default {
         label: '禁用'
       }],
       roleData: [],
+      userData: [],
       show: true,
       queryRoleData: {
         name: ''
@@ -283,7 +376,9 @@ export default {
       },
       saveDialogVisible: false,
       deleteDialogVisible: false,
-      updateDialogVisible: false
+      updateDialogVisible: false,
+      manageDialogVisible: false,
+      userDialogVisible: false
     }
   },
   mounted() {

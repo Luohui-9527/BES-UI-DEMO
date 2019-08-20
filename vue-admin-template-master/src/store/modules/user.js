@@ -1,5 +1,6 @@
 import { login, logout, getInfo, getMenu } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { saveHead } from '@/utils/requestUtils'
 import { resetRouter } from '@/router'
 
 const state = {
@@ -26,10 +27,11 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response.body
+        const { data } = response
         console.log(data)
         commit('SET_TOKEN', data.token)
         setToken(data.token)
+        saveHead('version', 'businessType', 'deviceId', 0, true)
         resolve()
       }).catch(error => {
         reject(error)
@@ -42,14 +44,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         console.log(response)
-        const { data } = response.body
+        const { data } = response
         console.log(data)
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
         const { name, profilePicture } = data
-
         commit('SET_NAME', name)
         commit('SET_PROFILEPICTURE', profilePicture)
         resolve(data)
