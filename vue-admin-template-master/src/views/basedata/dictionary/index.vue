@@ -27,7 +27,7 @@
       </el-header>
       <!-- 表格 -->
       <el-main v-if="show">
-        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" @selection-change="selectChange">
+        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" stripe="true" @selection-change="selectChange">
           <el-table-column v-model="editRow" type="selection" width="30%" />
           <!-- 索引 -->
           <el-table-column type="index" :index="indexMethod" width="30%" />
@@ -54,7 +54,7 @@
     </el-container>
     <!-- 增加窗口 -->
     <el-dialog title="基本信息" width="400px" :visible.sync="addFormVisible" :close-on-click-modal="false">
-      <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
+      <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="FormRules">
         <el-row>
           <el-form-item label="字典名" prop="name">
             <el-input v-model="addForm.name" auto-complete="off" />
@@ -89,19 +89,19 @@
     </el-dialog>
     <!-- 修改窗口 -->
     <el-dialog title="基本信息" width="400px" :visible.sync="editFormVisible" :close-on-click-modal="false">
-      <el-form ref="editForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
+      <el-form ref="editForm" :inline="true" :model="addForm" label-width="100px" :rules="FormRules">
         <el-row>
-          <el-form-item label="字典名" prop="dictionaryName">
+          <el-form-item label="字典名" prop="name">
             <el-input v-model="editForm.name" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典类型" prop="dictionaryType">
+          <el-form-item label="字典类型" prop="category">
             <el-input v-model="editForm.category" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典值" prop="dictionaryValue">
+          <el-form-item label="字典值" prop="value">
             <el-input v-model="editForm.value" auto-complete="off" />
           </el-form-item>
         </el-row>
@@ -184,7 +184,7 @@ export default {
       },
       //  批量选中data
       selectList: [],
-      addFormRules: {
+      FormRules: {
         name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
         category: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
         value: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
@@ -226,11 +226,11 @@ export default {
     //  分页
     //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
     //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
-    // getCurrentPageData() {
-    // let begin = (this.currentPage - 1) * this.pageSize
-    // let end = this.currentPage * this.pageSize
-    // var oldTable = this.tableData
-    // this.currentPageData = oldTable.slice(
+    //  getCurrentPageData() {
+    //   let begin = (this.currentPage - 1) * this.pageSize
+    //   let end = this.currentPage * this.pageSize
+    //   var oldTable = this.tableData
+    //   this.currentPageData = oldTable.slice(
     //   begin,
     //   end
     // )
