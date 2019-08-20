@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <el-container>
+      <!--el-aside为树的部分，不用可以删去-->
       <el-aside width="180px">
         <h3 class="el-icon-folder" style="margin: 0px">
           组织机构
@@ -65,15 +66,16 @@
           </el-menu>
         </div>
       </el-aside>
+      <!--el-main为表格主体的部分，下面都可以直接抄-->
       <el-main>
         <el-header style="height:30% width: 100%">
           <el-row>
             <el-form :inline="true" style="float: left">
               <el-form-item label="公司名：">
-                <el-input v-model="companyData.name" size="mini" style="width: 130px" placeholder="请输入" />
+                <el-input v-model="queryCompanyData.name" size="mini" style="width: 130px" placeholder="请输入" />
               </el-form-item>
               <el-form-item label="组织机构：">
-                <el-select v-model="companyData.status" size="mini" placeholder="请选择" style="width: 130px">
+                <el-select v-model="queryCompanyData.orgName" size="mini" placeholder="请选择" style="width: 130px">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -83,7 +85,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" size="mini" @click="queryDictionaryData">查询</el-button>
+                <el-button type="primary" size="mini" @click="queryCompany">查询</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button size="mini">重置</el-button>
@@ -129,39 +131,39 @@
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">公司基本信息</i>
       </el-header>
-      <el-divider style="margin-top:10px" />
-      <el-form ref="saveForm" :model="saveForm" label-width="100px" size="mini" inline="true">
-        <el-form-item required="true" label="公司名：">
-          <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" prop="insitution" />
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="saveForm" :model="saveForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
+        <el-form-item label="公司名：" prop="name">
+          <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="公司编号：">
-          <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="公司编号：" prop="code">
+          <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="助记码：">
-          <el-input v-model="saveForm.mnemonicCode" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="助记码：" prop="mnemonicCode">
+          <el-input v-model="saveForm.mnemonicCode" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="法人：">
-          <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="法人：" prop="master">
+          <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="税号：">
-          <el-input v-model="saveForm.tax" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="税号：" prop="tax">
+          <el-input v-model="saveForm.tax" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="传真：">
-          <el-input v-model="saveForm.fax" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="传真：" prop="fax">
+          <el-input v-model="saveForm.fax" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="电话：">
-          <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="电话：" prop="tel">
+          <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="地址：">
-          <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="地址：" prop="address">
+          <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="所属机构：">
-          <el-input v-model="saveForm.orgName" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="所属机构：" prop="orgName">
+          <el-input v-model="saveForm.orgName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="邮编：">
-          <el-input v-model="saveForm.email" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="邮编：" prop="email">
+          <el-input v-model="saveForm.email" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="是否启用：">
+        <el-form-item label="是否启用：" prop="status">
           <el-radio v-model="saveForm.status" label="1">是</el-radio>
           <el-radio v-model="saveForm.status" label="0">否</el-radio>
         </el-form-item>
@@ -182,39 +184,39 @@
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">公司基本信息</i>
       </el-header>
-      <el-divider style="margin-top: 10px" />
-      <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true">
-        <el-form-item required="true" label="公司名：">
-          <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" prop="insitution" />
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
+        <el-form-item label="公司名：" prop="name">
+          <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="公司编号：">
-          <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="公司编号：" prop="code">
+          <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="助记码：">
-          <el-input v-model="updateForm.mnemonicCode" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="助记码：" prop="mnemonicCode">
+          <el-input v-model="updateForm.mnemonicCode" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="法人：">
-          <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="法人：" prop="master">
+          <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="税号：">
-          <el-input v-model="updateForm.tax" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="税号：" prop="tax">
+          <el-input v-model="updateForm.tax" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="传真：">
-          <el-input v-model="updateForm.fax" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="传真：" prop="fax">
+          <el-input v-model="updateForm.fax" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="电话：">
-          <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="电话：" prop="tel">
+          <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="地址：">
-          <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="地址：" prop="address">
+          <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="所属机构：">
-          <el-input v-model="updateForm.orgName" style="width: 200px" placeholder="请输入" prop="insitution" />
+        <el-form-item label="所属机构：" prop="insitution">
+          <el-input v-model="updateForm.orgName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="邮编：">
-          <el-input v-model="updateForm.email" style="width: 200px" placeholder="请输入" prop="company" />
+        <el-form-item label="邮编：" prop="email">
+          <el-input v-model="updateForm.email" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item required="true" label="是否启用：">
+        <el-form-item label="是否启用：" prop="status">
           <el-radio v-model="updateForm.status" label="1">是</el-radio>
           <el-radio v-model="updateForm.status" label="0">否</el-radio>
         </el-form-item>
@@ -234,6 +236,7 @@ export default {
   name: 'Position',
   data() {
     return {
+      // options之上都为树要用的类，不用树可以删去
       DATA: null,
       NODE: null,
       dialogNewFormVisible: false,
@@ -266,6 +269,23 @@ export default {
       }],
       companyData: [],
       show: true,
+      queryCompanyData: {
+        name: '',
+        orgName: ''
+      },
+      FormRules: {
+        companyId: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        mnemonicCode: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        master: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        tax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        fax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        orgName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        website: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        status: [{ required: true, message: '请输入字典名', trigger: 'blur' }]
+      },
       saveForm: {
         companyId: '',
         name: '',
@@ -303,13 +323,38 @@ export default {
   },
   mounted() {
     this.dragControllerDiv()
-    this.getDictionary()
+    this.getCompany()
   },
   methods: {
-    getDictionary() {
-      this.$axios.get('http:// localhost:8080/dictionary/findAll').then(res => {
-        this.dictionaryData = res.data
-        console.log(this.getDictionaryData)
+    getCompany() {
+      this.$axios.get('/company/getCompany').then(res => {
+        this.companyData = res.data
+        for (let i = 0; i < this.companyData.length; i++) {
+          this.options.add(this.company.orgName, i + 1)
+        }
+        console.log(this.companyData)
+      })
+    },
+    queryCompany() {
+      let commonRequest = {}
+      commonRequest = {
+        head: {
+          'version': '1',
+          'token': this.$store.state.user.token,
+          'businessType': '1',
+          'deviceId': '1',
+          'deviceType': '0',
+          'encrypt': 'false'
+        },
+        body: {
+          data: {
+            name: this.queryCompanyData.name,
+            orgName: this.queryCompanyData.orgName
+          }
+        }
+      }
+      this.$axios.get('/company/queryCompany', commonRequest).then(res => {
+        this.companyData = res.data
       })
     },
     handleRightSelect(key) {
