@@ -56,17 +56,17 @@
     <el-dialog title="基本信息" width="400px" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
         <el-row>
-          <el-form-item label="字典名" prop="dictionaryName">
+          <el-form-item label="字典名" prop="name">
             <el-input v-model="addForm.name" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典类型" prop="dictionaryType">
+          <el-form-item label="字典类型" prop="category">
             <el-input v-model="addForm.category" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="字典值" prop="dictionaryValue">
+          <el-form-item label="字典值" prop="value">
             <el-input v-model="addForm.value" auto-complete="off" />
           </el-form-item>
         </el-row>
@@ -102,7 +102,7 @@
         </el-row>
         <el-row>
           <el-form-item label="字典值" prop="dictionaryValue">
-            <el-input v-model="editForm.dictionaryValue" auto-complete="off" />
+            <el-input v-model="editForm.value" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -113,7 +113,7 @@
         </el-row>
         <el-row>
           <el-form-item label="备注信息" prop="comment">
-            <el-input v-model="editForm.comment" type="textarea" :rows="4" auto-complete="off" />
+            <el-input v-model="editForm.remark" type="textarea" :rows="4" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -185,9 +185,9 @@ export default {
       //  批量选中data
       selectList: [],
       addFormRules: {
-        dictionaryName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        dictionaryType: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
-        dictionaryValue: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        category: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
+        value: [{ required: true, message: '请输入字典值', trigger: 'blur' }],
         status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       },
       //  编辑界面是否显示
@@ -199,11 +199,11 @@ export default {
       //  编辑界面数据
       editForm: {
         id: '',
-        dictionaryName: '',
-        dictionaryType: '',
-        dictionaryValue: '',
+        name: '',
+        category: '',
+        value: '',
         status: '',
-        comment: ''
+        remark: ''
       },
       //  分页
       totalPage: 1, //  统共页数，默认为1
