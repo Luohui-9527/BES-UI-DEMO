@@ -1,10 +1,11 @@
 <template>
   <div class="dashboard-container">
     <el-container>
+      <!--el-aside为树的部分，不用可以删去-->
       <el-aside width="180px">
         <h3 class="el-icon-folder" style="margin: 0px">
-          组织机构
-          <i class="el-icon-plus" />
+          部门机构
+          <i class="el-icon-plus" @click="saveDialogVisible = true" />
           <i class="el-icon-refresh-left" />
         </h3>
         <el-tree
@@ -65,18 +66,22 @@
           </el-menu>
         </div>
       </el-aside>
+      <!--el-main为表格主体的部分，下面都可以直接抄-->
       <el-main>
         <el-header style="height:30% width: 100%">
           <el-row>
             <el-form :inline="true" style="float: left">
-              <el-form-item label="字典名称：">
-                <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+              <el-form-item label="用户名称：">
+                <el-input v-model="queryUserData.name" size="mini" style="width: 120px" placeholder="请输入" />
               </el-form-item>
-              <el-form-item label="字典类型：">
-                <el-input v-model="dictionaryData.category" style="width: 130px" placeholder="请输入" />
+              <el-form-item label="工号：">
+                <el-input v-model="queryUserData.code" size="mini" style="width: 120px" placeholder="请输入" />
               </el-form-item>
-              <el-form-item label="状态：">
-                <el-select v-model="dictionaryData.status" placeholder="请选择" style="width: 130px">
+              <el-form-item label="手机号：">
+                <el-input v-model="queryUserData.tel" size="mini" style="width: 150px" placeholder="请输入" />
+              </el-form-item>
+              <el-form-item label="角色：">
+                <el-select v-model="queryUserData.roleName" size="mini" placeholder="请选择" style="width: 120px">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -86,35 +91,38 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="queryDictionaryData">查询</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button>重置</el-button>
+                <el-button type="primary" size="mini" @click="queryCompany">查询</el-button>
               </el-form-item>
             </el-form>
           </el-row>
           <el-row style="display: inline">
-            <el-button type="success" size="mini">增加</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
-            <el-button type="warning" size="mini">修改</el-button>
-            <el-button type="primary" size="mini">导入</el-button>
-            <el-button type="primary" size="mini">导出</el-button>
+            <el-button type="success" size="mini" icon="el-icon-plus" @click="saveDialogVisible = true">增加</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteDialogVisible = true">删除</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-edit" @click="updateDialogVisible = true">修改</el-button>
+            <el-button type="success" size="mini" icon="el-icon-user" @click="userDialogVisible = true">分配角色</el-button>
           </el-row>
         </el-header>
         <el-main v-if="show">
-          <el-table :data="dictionaryData" border style="width: 100%" height="90%">
+          <el-table :data="userData" border style="width: 100%" stripe="true" height="90%">
             <el-table-column type="selection" width="35" />
-            <el-table-column prop="name" label="字典名" />
-            <el-table-column prop="category" label="字典类型" />
-            <el-table-column prop="value" label="更新时间" />
-            <el-table-column prop="category" label="备注" />
-            <el-table-column prop="remark" label="状态" />
-            <el-table-column label="操作" width="210">
+            <el-table-column prop="code" label="用户工号" align="center" />
+            <el-table-column prop="password" label="初始密码" align="center" />
+            <el-table-column prop="name" label="名字" align="center" />
+            <el-table-column prop="roleName" label="角色" align="center" />
+            <el-table-column prop="sex" label="性别" align="center" />
+            <el-table-column prop="birthday" label="生日" align="center" />
+            <el-table-column prop="positionName" label="职位" align="center" />
+            <el-table-column prop="tel" label="电话" align="center" />
+            <el-table-column prop="email" label="邮箱" align="center" />
+            <el-table-column prop="other" label="其他/微信" align="center" />
+            <el-table-column prop="remark" label="备注" align="center" />
+            <el-table-column prop="status" label="是否启用" align="center" />
+            <el-table-column label="操作" width="210" align="center">
               <template>
-                <el-button type="primary" icon="el-icon-edit" size="mini" circle />
-                <el-button type="success" icon="el-icon-check" size="mini" circle />
-                <el-button type="warning" icon="el-icon-star-off" size="mini" circle />
-                <el-button type="danger" icon="el-icon-delete" size="mini" circle />
+                <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
+                <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
+                <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
+                <el-button type="success" size="mini" icon="el-icon-user" @click="userDialogVisible = true" />
               </template>
             </el-table-column>
           </el-table>
@@ -125,6 +133,111 @@
         </el-main>
       </el-main>
     </el-container>
+    <el-dialog :visible.sync="saveDialogVisible" title="新增用户" center>
+      <el-header style="height: 5px">
+        <i class="el-icon-user" style="float: left">用户基本信息</i>
+      </el-header>
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="saveForm" :model="saveForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
+        <el-form-item label="用户工号：" prop="code">
+          <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="初始密码：" prop="password">
+          <el-input v-model="saveForm.password" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="名字：" prop="name">
+          <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="职位：" prop="positionName">
+          <el-input v-model="saveForm.positionName" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="性别：" prop="sex">
+          <el-input v-model="saveForm.sex" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="生日：" prop="birthday">
+          <el-input v-model="saveForm.birthday" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="职务：" prop="positionName">
+          <el-input v-model="saveForm.positionName" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="电话：" prop="tel">
+          <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="邮箱：" prop="email">
+          <el-input v-model="saveForm.email" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="其他/微信：" prop="other">
+          <el-input v-model="saveForm.other" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input v-model="saveForm.remark" style="width: 500px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="是否启用：" prop="status">
+          <el-radio v-model="saveForm.status" label="1">是</el-radio>
+          <el-radio v-model="saveForm.status" label="0">否</el-radio>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="saveDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
+      <span>确定要删除该用户吗？</span>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
+        <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="updateDialogVisible" title="修改用户" center>
+      <el-header style="height: 5px">
+        <i class="el-icon-user" style="float: left">用户基本信息</i>
+      </el-header>
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
+        <el-form-item label="用户工号：" prop="code">
+          <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="初始密码：" prop="password">
+          <el-input v-model="updateForm.password" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="名字：" prop="name">
+          <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="职位：" prop="positionName">
+          <el-input v-model="updateForm.positionName" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="性别：" prop="sex">
+          <el-input v-model="updateForm.sex" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="生日：" prop="birthday">
+          <el-input v-model="updateForm.birthday" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="职务：" prop="positionName">
+          <el-input v-model="updateForm.positionName" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="电话：" prop="tel">
+          <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="邮箱：" prop="email">
+          <el-input v-model="updateForm.email" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="其他/微信：" prop="other">
+          <el-input v-model="updateForm.other" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input v-model="updateForm.remark" style="width: 500px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="是否启用：" prop="status">
+          <el-radio v-model="updateForm.status" label="1">是</el-radio>
+          <el-radio v-model="updateForm.status" label="0">否</el-radio>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="updateDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -134,20 +247,13 @@ api.treelist = api.treelist.splice(0, 10)
 export default {
   name: 'Position',
   data() {
-    const item = {
-      tagID: 'ID001',
-      name: '地区',
-      description: '此处是改内容的详细描述...',
-      creatorID: 'Admin',
-      regeneratorID: 'Admin'
-    }
     return {
+      // options之上都为树要用的类，不用树可以删去
       DATA: null,
       NODE: null,
       dialogNewFormVisible: false,
       dialogFormVisible: false,
       dialogClassifyVisible: false,
-      tableData: Array(10).fill(item),
       maxexpandId: api.maxexpandId, // 新增节点开始id
       non_maxexpandId: api.maxexpandId, // 新增节点开始id(不更改)
       isLoadingTree: true, // 是否加载节点树
@@ -166,19 +272,99 @@ export default {
       // 分类修改*/
       menuVisible2: false,
       objectID2: null,
-      dictionaryData: [],
-      show: true
+      options: [{
+        value: 1,
+        label: '正常'
+      }, {
+        value: 0,
+        label: '禁用'
+      }],
+      userData: [],
+      show: true,
+      queryUserData: {
+        name: '',
+        code: '',
+        tel: '',
+        roleName: ''
+      },
+      FormRules: {
+        name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入用户工号', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
+        sex: [{ required: true, message: '请输入性别', trigger: 'blur' }],
+        birthday: [{ required: true, message: '请输入生日', trigger: 'blur' }],
+        positionName: [{ required: true, message: '请输入职务', trigger: 'blur' }],
+        tel: [{ required: true, message: '请输入电话', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        status: [{ required: true, message: '请输入字典名', trigger: 'blur' }]
+      },
+      saveForm: {
+        userId: '',
+        name: '',
+        code: '',
+        password: '',
+        sex: '',
+        birthday: '',
+        positionName: '',
+        tel: '',
+        email: '',
+        other: '',
+        remark: '',
+        status: ''
+      },
+      updateForm: {
+        userId: '',
+        name: '',
+        code: '',
+        password: '',
+        sex: '',
+        birthday: '',
+        positionName: '',
+        tel: '',
+        email: '',
+        other: '',
+        remark: '',
+        status: ''
+      },
+      saveDialogVisible: false,
+      deleteDialogVisible: false,
+      updateDialogVisible: false
     }
   },
   mounted() {
     this.dragControllerDiv()
-    this.getDictionary()
+    this.getCompany()
   },
   methods: {
-    getDictionary() {
-      this.$axios.get('http:// localhost:8080/dictionary/findAll').then(res => {
-        this.dictionaryData = res.data
-        console.log(this.getDictionaryData)
+    getCompany() {
+      this.$axios.get('/company/getCompany').then(res => {
+        this.companyData = res.data
+        for (let i = 0; i < this.companyData.length; i++) {
+          this.options.add(this.company.orgName, i + 1)
+        }
+        console.log(this.companyData)
+      })
+    },
+    queryCompany() {
+      let commonRequest = {}
+      commonRequest = {
+        head: {
+          'version': '1',
+          'token': this.$store.state.user.token,
+          'businessType': '1',
+          'deviceId': '1',
+          'deviceType': '0',
+          'encrypt': 'false'
+        },
+        body: {
+          data: {
+            name: this.queryCompanyData.name,
+            orgName: this.queryCompanyData.orgName
+          }
+        }
+      }
+      this.$axios.get('/company/queryCompany', commonRequest).then(res => {
+        this.companyData = res.data
       })
     },
     handleRightSelect(key) {
@@ -297,10 +483,6 @@ export default {
 .dashboard {
   &-container {
     margin: 10px;
-  }
-  &-text {
-    font-size: 20px;
-    line-height: 10px;
   }
 }
 .span-ellipsis {

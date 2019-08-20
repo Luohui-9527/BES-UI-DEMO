@@ -6,23 +6,22 @@
         <el-row>
           <el-form :inline="true" style="float: left">
             <el-form-item label="题目分类：">
-              <!-- 下拉框 -->
-              <el-cascader :options="options" clearable />
+              <el-input v-model="subject.category" style="width: 130px" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="选择题型：">
-              <el-input v-model="subjectData.subjectType" placeholder="请输入" style="width: 130px" />
+              <el-input v-model="subject.subjectType" placeholder="请输入" style="width: 130px" />
             </el-form-item>
             <el-form-item label="输入题目：">
-              <el-input v-model="subjectData.status" placeholder="请输入" style="width: 130px" />
+              <el-input v-model="subject.name" placeholder="请输入" style="width: 130px" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary">查询</el-button>
+              <el-button type="primary" @click="queryDictionaryData">查询</el-button>
             </el-form-item>
           </el-form>
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">增加</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="editSubjectById({},selectList[0])">修改</el-button>
           <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
@@ -42,7 +41,7 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" circle @click="handleAdd" />
+              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
               <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="editSubjectById(scope.$index,scope.row)" />
             </template>
@@ -97,8 +96,8 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注信息" prop="remark">
-            <el-input v-model="addForm.remark" type="textarea" :rows="4" auto-complete="off" style="width: 300px" />
+          <el-form-item label="备注信息" prop="comment">
+            <el-input v-model="addForm.comment" type="textarea" :rows="4" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -385,7 +384,7 @@ export default {
     },
     //  批量删除
     mutiDel: function() {
-      this.$confirm('确认提交吗？', '提示', {}).then(() => {
+      this.$confirm('确认删除吗？', '提示', {}).then(() => {
         const length = this.selectList.length
         for (let i = 0; i < length; i++) {
           this.deleteDic(this.selectList[i].id)
