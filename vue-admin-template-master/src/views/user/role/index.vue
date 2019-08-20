@@ -113,7 +113,7 @@
         </el-main>
       </el-main>
     </el-container>
-    <el-dialog :visible.sync="saveDialogVisible" title="新增角色" center>
+    <el-dialog :visible.sync="saveDialogVisible" title="新增角色" center width="600px">
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">角色基本信息</i>
       </el-header>
@@ -159,7 +159,7 @@
       </span>
     </el-dialog>
     <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
-      <span>确定要删除公司的基本信息吗？</span>
+      <span>确定要删除该角色吗？</span>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
         <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
@@ -257,40 +257,28 @@ export default {
         name: ''
       },
       FormRules: {
-        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        orgName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        companyName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        status: [{ required: true, message: '请输入字典名', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入角色代号', trigger: 'blur' }],
+        orgName: [{ required: true, message: '请选择所属机构', trigger: 'blur' }],
+        companyName: [{ required: true, message: '请选择所属公司', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       },
       saveForm: {
         roleId: '',
         name: '',
         code: '',
-        mnemonicCode: '',
-        master: '',
-        tax: '',
-        fax: '',
-        tel: '',
-        address: '',
+        remark: '',
         orgName: '',
-        email: '',
-        website: '',
+        companyName: '',
         status: ''
       },
       updateForm: {
         roleId: '',
         name: '',
         code: '',
-        mnemonicCode: '',
-        master: '',
-        tax: '',
-        fax: '',
-        tel: '',
-        address: '',
+        remark: '',
         orgName: '',
-        email: '',
-        website: '',
+        companyName: '',
         status: ''
       },
       saveDialogVisible: false,

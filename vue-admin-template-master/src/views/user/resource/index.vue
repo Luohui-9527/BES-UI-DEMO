@@ -72,7 +72,7 @@
           <el-row>
             <el-form :inline="true" style="float: left">
               <el-form-item label="节点名称：">
-                <el-select v-model="queryCompanyData.orgName" size="mini" placeholder="请选择" style="width: 130px">
+                <el-select v-model="queryResourceData.name" size="mini" placeholder="请选择" style="width: 130px">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -82,7 +82,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="父亲节点：">
-                <el-input v-model="queryCompanyData.name" size="mini" style="width: 130px" placeholder="请输入" />
+                <el-input v-model="queryResourceData.parentName" size="mini" style="width: 130px" placeholder="请输入" />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" @click="queryCompany">查询</el-button>
@@ -96,7 +96,7 @@
           </el-row>
         </el-header>
         <el-main v-if="show">
-          <el-table :data="companyData" border style="width: 100%" stripe="true" height="90%">
+          <el-table :data="resourceData" border style="width: 100%" stripe="true" height="90%">
             <el-table-column type="selection" width="35" />
             <el-table-column prop="name" label="节点名称" align="center" />
             <el-table-column prop="code" label="编号" align="center" />
@@ -121,45 +121,36 @@
         </el-main>
       </el-main>
     </el-container>
-    <el-dialog :visible.sync="saveDialogVisible" title="新增公司的基本信息" center>
+    <el-dialog :visible.sync="saveDialogVisible" title="新增资源基本信息" center>
       <el-header style="height: 5px">
-        <i class="el-icon-user" style="float: left">公司基本信息</i>
+        <i class="el-icon-user" style="float: left">资源基本信息</i>
       </el-header>
       <el-divider style="margin: 10px 0px" />
-      <el-form ref="saveForm" :model="saveForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
-        <el-form-item label="公司名：" prop="name">
+      <el-form ref="saveForm" :model="saveForm" label-width="120px" size="mini" inline="true" :rules="FormRules">
+        <el-form-item label="节点名称：" prop="name">
           <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="公司编号：" prop="code">
+        <el-form-item label="节点编号：" prop="code">
           <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="助记码：" prop="mnemonicCode">
-          <el-input v-model="saveForm.mnemonicCode" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="父亲节点：" prop="parentName">
+          <el-input v-model="saveForm.parentName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="法人：" prop="master">
-          <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="URL：" prop="url">
+          <el-input v-model="saveForm.url" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="税号：" prop="tax">
-          <el-input v-model="saveForm.tax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="资源类型：" prop="resourceType">
+          <el-input v-model="saveForm.resourceType" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="传真：" prop="fax">
-          <el-input v-model="saveForm.fax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="关闭图标：" prop="closeImg">
+          <el-input v-model="saveForm.closeImg" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="电话：" prop="tel">
-          <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="打开图标：" prop="openImg">
+          <el-input v-model="saveForm.openImg" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="地址：" prop="address">
-          <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="所属机构：" prop="orgName">
-          <el-input v-model="saveForm.orgName" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="邮编：" prop="email">
-          <el-input v-model="saveForm.email" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="是否启用：" prop="status">
-          <el-radio v-model="saveForm.status" label="1">是</el-radio>
-          <el-radio v-model="saveForm.status" label="0">否</el-radio>
+        <el-form-item label="是否叶子节点：" prop="leaf">
+          <el-radio v-model="saveForm.leaf" label="1">是</el-radio>
+          <el-radio v-model="saveForm.leaf" label="0">否</el-radio>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -168,51 +159,42 @@
       </span>
     </el-dialog>
     <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
-      <span>确定要删除公司的基本信息吗？</span>
+      <span>确定要删除该资源吗？</span>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
         <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="updateDialogVisible" title="修改公司的基本信息" center>
+    <el-dialog :visible.sync="updateDialogVisible" title="修改资源基本信息" center>
       <el-header style="height: 5px">
-        <i class="el-icon-user" style="float: left">公司基本信息</i>
+        <i class="el-icon-user" style="float: left">资源基本信息</i>
       </el-header>
       <el-divider style="margin: 10px 0px" />
-      <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
-        <el-form-item label="公司名：" prop="name">
+      <el-form ref="updateForm" :model="updateForm" label-width="120px" size="mini" inline="true" :rules="FormRules">
+        <el-form-item label="节点名称：" prop="name">
           <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="公司编号：" prop="code">
+        <el-form-item label="节点编号：" prop="code">
           <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="助记码：" prop="mnemonicCode">
-          <el-input v-model="updateForm.mnemonicCode" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="父亲节点：" prop="parentName">
+          <el-input v-model="updateForm.parentName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="法人：" prop="master">
-          <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="URL：" prop="url">
+          <el-input v-model="updateForm.url" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="税号：" prop="tax">
-          <el-input v-model="updateForm.tax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="资源类型：" prop="resourceType">
+          <el-input v-model="updateForm.resourceType" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="传真：" prop="fax">
-          <el-input v-model="updateForm.fax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="关闭图标：" prop="closeImg">
+          <el-input v-model="updateForm.closeImg" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="电话：" prop="tel">
-          <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="打开图标：" prop="openImg">
+          <el-input v-model="updateForm.openImg" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="地址：" prop="address">
-          <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="所属机构：" prop="insitution">
-          <el-input v-model="updateForm.orgName" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="邮编：" prop="email">
-          <el-input v-model="updateForm.email" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="是否启用：" prop="status">
-          <el-radio v-model="updateForm.status" label="1">是</el-radio>
-          <el-radio v-model="updateForm.status" label="0">否</el-radio>
+        <el-form-item label="是否叶子节点：" prop="leaf">
+          <el-radio v-model="updateForm.leaf" label="1">是</el-radio>
+          <el-radio v-model="updateForm.leaf" label="0">否</el-radio>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -261,54 +243,43 @@ export default {
         value: 0,
         label: '禁用'
       }],
-      companyData: [],
+      resourceData: [],
       show: true,
-      queryCompanyData: {
+      queryResourceData: {
         name: '',
-        orgName: ''
+        parentName: ''
       },
       FormRules: {
-        companyId: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        mnemonicCode: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        master: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        tax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        fax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        orgName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        website: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        status: [{ required: true, message: '请输入字典名', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入节点名称', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入编号', trigger: 'blur' }],
+        parentName: [{ required: true, message: '请输入父亲节点', trigger: 'blur' }],
+        url: [{ required: true, message: '请输入URL', trigger: 'blur' }],
+        resourceType: [{ required: true, message: '请输入资源类型', trigger: 'blur' }],
+        closeImg: [{ required: true, message: '请输入关闭图标', trigger: 'blur' }],
+        openImg: [{ required: true, message: '请输入打开图标', trigger: 'blur' }],
+        leaf: [{ required: true, message: '请选择是否为叶子节点', trigger: 'blur' }]
       },
       saveForm: {
-        companyId: '',
+        resourceId: '',
         name: '',
         code: '',
-        mnemonicCode: '',
-        master: '',
-        tax: '',
-        fax: '',
-        tel: '',
-        address: '',
-        orgName: '',
-        email: '',
-        website: '',
-        status: ''
+        parentName: '',
+        url: '',
+        resourceType: '',
+        closeImg: '',
+        openImg: '',
+        leaf: ''
       },
       updateForm: {
-        companyId: '',
+        resourceId: '',
         name: '',
         code: '',
-        mnemonicCode: '',
-        master: '',
-        tax: '',
-        fax: '',
-        tel: '',
-        address: '',
-        orgName: '',
-        email: '',
-        website: '',
-        status: ''
+        parentName: '',
+        url: '',
+        resourceType: '',
+        closeImg: '',
+        openImg: '',
+        leaf: ''
       },
       saveDialogVisible: false,
       deleteDialogVisible: false,
