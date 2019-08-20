@@ -65,7 +65,7 @@
           <el-table-column prop="title" label="考试标题" />
           <el-table-column prop="descript" label="考试说明" />
           <el-table-column prop="status" label="状态列" />
-          <el-table-column prop="publishTime" label="发布次数" />
+          <el-table-column prop="publishTimes" label="发布次数" />
           <el-table-column label="操作" width="150px">
             <el-button
               type="primary"
@@ -87,15 +87,18 @@
 
     <el-dialog title="发布信息" :visible.sync="dialogFormVisible" center>
       <el-form :model="publishForm" label-width="170px">
-        <el-form-item label="试卷" :label-width="formLabelWidth">
-          <el-select v-model="publishForm.value" filterable placeholder="请选择">
-            <el-option
-              v-for="item in publishForm.papers"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+        <el-form-item label="试卷">
+          <el-tag
+            v-for="tag in publishForm.paper"
+            :key="tag"
+            closable
+            @close="closeTag(tag)"
+          >{{ tag }}</el-tag>
+          <el-button
+            type="primary"
+            :disabled="publishForm.paper.length >= 1"
+            @click="innerVisible = true"
+          >选择试卷</el-button>
         </el-form-item>
         <el-form-item label="考试场次">
           <el-input v-model="publishForm.examSession" style="width: 50%" />
@@ -153,6 +156,21 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitPublishForm();dialogFormVisible = false">确 定</el-button>
       </div>
+      <!-- 内层dialog -->
+      <el-dialog width="30%" title="内层 Dialog" :visible.sync="innerVisible" append-to-body>
+        <el-form :model="dialogForm" :inline="true">
+          <el-form-item label="试卷名称">
+            <el-input v-model="dialogForm.paper" placeholder="试卷名称" />
+          </el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="submit">查询</el-button>
+        </el-form>
+        <el-table :data="dialogTableData" border style="width: 100%" height="90%">
+          <el-table-column prop="paper" label="试卷名称" width="280px" />
+          <el-table-column label="操作">
+            <el-button type="primary" @click="choosePaper();innerVisible = false">选择</el-button>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
     </el-dialog>
   </div>
 </template>
@@ -162,30 +180,28 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [{ publisher: 'syt', publishTimeRange: new Date().toLocaleString(), endTime: new Date().toLocaleString(), planPepoleNum: 5, limitTime: 50, examiner: 'syt', title: 'java', descript: 'hhhh', status: '1', publishTime: new Date().toLocaleString() }],
+      tableData: [{ publisher: 'syt', publishTimeRange: new Date().toLocaleString(), endTime: new Date().toLocaleString(), planPepoleNum: 5, limitTime: 50, examiner: 'syt', title: 'java', descript: 'hhhh', status: '启用', publishTimes: 3 }],
+      dialogTableData: [],
       dialogFormVisible: false,
       visible: false,
+      innerVisible: false,
       form: {
         publisher: '',
         publishTimeRange: [],
         title: '',
         examTimeRange: []
       },
+      dialogForm: {
+        title: ''
+      },
       publishForm: {
+        paper: ['试卷1'],
         examSession: '',
         title: '',
         endDate: '',
         endTime: '',
         planPepoleNum: '',
         limitTime: '',
-        papers: [{
-          value: '选项1',
-          label: '试卷1'
-        },
-        {
-          value: '选项2',
-          label: '试卷2'
-        }],
         markingModes: [{
           value: '选项1',
           label: '阅卷方式1'
@@ -212,8 +228,14 @@ export default {
     submitPublishForm() {
 
     },
+    choosePaper() {
+
+    },
     toQRCode() {
       this.$router.push({ name: 'DoPaper' })
+    },
+    closeTag(tag) {
+      this.publishForm.paper.splice(this.publishForm.paper.indexOf(tag), 1)
     },
     open() {
       this.$confirm('此操作将永久删除选中内容, 是否继续?', '提示', {

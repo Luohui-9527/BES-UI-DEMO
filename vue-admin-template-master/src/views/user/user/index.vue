@@ -4,7 +4,7 @@
       <!--el-aside为树的部分，不用可以删去-->
       <el-aside width="180px">
         <h3 class="el-icon-folder" style="margin: 0px">
-          组织机构
+          部门机构
           <i class="el-icon-plus" @click="saveDialogVisible = true" />
           <i class="el-icon-refresh-left" />
         </h3>
@@ -71,8 +71,24 @@
         <el-header style="height:30% width: 100%">
           <el-row>
             <el-form :inline="true" style="float: left">
-              <el-form-item label="角色名称：">
-                <el-input v-model="queryCompanyData.name" size="mini" style="width: 130px" placeholder="请输入" />
+              <el-form-item label="用户名称：">
+                <el-input v-model="queryUserData.name" size="mini" style="width: 120px" placeholder="请输入" />
+              </el-form-item>
+              <el-form-item label="工号：">
+                <el-input v-model="queryUserData.code" size="mini" style="width: 120px" placeholder="请输入" />
+              </el-form-item>
+              <el-form-item label="手机号：">
+                <el-input v-model="queryUserData.tel" size="mini" style="width: 150px" placeholder="请输入" />
+              </el-form-item>
+              <el-form-item label="角色：">
+                <el-select v-model="queryUserData.roleName" size="mini" placeholder="请选择" style="width: 120px">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" @click="queryCompany">查询</el-button>
@@ -83,27 +99,30 @@
             <el-button type="success" size="mini" icon="el-icon-plus" @click="saveDialogVisible = true">增加</el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteDialogVisible = true">删除</el-button>
             <el-button type="warning" size="mini" icon="el-icon-edit" @click="updateDialogVisible = true">修改</el-button>
+            <el-button type="success" size="mini" icon="el-icon-user" @click="roleDialogVisible = true">分配角色</el-button>
           </el-row>
         </el-header>
         <el-main v-if="show">
-          <el-table :data="companyData" border style="width: 100%" stripe="true" height="90%">
+          <el-table :data="userData" border style="width: 100%" stripe="true" height="90%">
             <el-table-column type="selection" width="35" />
-            <el-table-column prop="name" label="公司名" align="center" />
-            <el-table-column prop="code" label="公司编号" align="center" />
-            <el-table-column prop="mnemonicCode" label="助记码" align="center" />
-            <el-table-column prop="master" label="法人" align="center" />
-            <el-table-column prop="tax" label="税号" align="center" />
-            <el-table-column prop="fax" label="传真" align="center" />
-            <el-table-column prop="address" label="地址" align="center" />
-            <el-table-column prop="orgName" label="所属机构" align="center" />
+            <el-table-column prop="code" label="用户工号" align="center" />
+            <el-table-column prop="password" label="初始密码" align="center" />
+            <el-table-column prop="name" label="名字" align="center" />
+            <el-table-column prop="roleName" label="角色" align="center" />
+            <el-table-column prop="sex" label="性别" align="center" />
+            <el-table-column prop="birthday" label="生日" align="center" />
+            <el-table-column prop="positionName" label="职位" align="center" />
+            <el-table-column prop="tel" label="电话" align="center" />
             <el-table-column prop="email" label="邮箱" align="center" />
-            <el-table-column prop="website" label="网址" align="center" />
+            <el-table-column prop="other" label="其他/微信" align="center" />
+            <el-table-column prop="remark" label="备注" align="center" />
             <el-table-column prop="status" label="是否启用" align="center" />
             <el-table-column label="操作" width="210" align="center">
               <template>
                 <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
                 <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
                 <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
+                <el-button type="success" size="mini" icon="el-icon-user" @click="roleDialogVisible = true" />
               </template>
             </el-table-column>
           </el-table>
@@ -114,41 +133,68 @@
         </el-main>
       </el-main>
     </el-container>
-    <el-dialog :visible.sync="saveDialogVisible" title="新增公司的基本信息" center>
+    <el-dialog :visible.sync="roleDialogVisible" title="分配角色" center>
+      <el-table :data="roleData" border style="width: 100%" stripe="true" height="90%">
+        <el-table-column type="selection" width="35px" />
+        <el-table-column prop="name" label="角色名称" align="center" />
+        <el-table-column prop="code" label="角色代号" align="center" />
+        <el-table-column prop="remark" label="角色备注" align="center" />
+        <el-table-column prop="orgName" label="所属机构" align="center" />
+        <el-table-column prop="companyName" label="所属公司" align="center" />
+        <el-table-column prop="status" label="是否启用" align="center" />>
+        <el-table-column label="操作" width="210" align="center">
+          <template>
+            <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="saveDialogVisible = true" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
+            <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
+            <el-button type="success" size="mini" icon="el-icon-circle-plus-outline" @click="manageDialogVisible = true" />
+            <el-button type="success" size="mini" icon="el-icon-user" @click="userDialogVisible = true" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="roleDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog :visible.sync="saveDialogVisible" title="新增用户" center>
       <el-header style="height: 5px">
-        <i class="el-icon-user" style="float: left">公司基本信息</i>
+        <i class="el-icon-user" style="float: left">用户基本信息</i>
       </el-header>
       <el-divider style="margin: 10px 0px" />
       <el-form ref="saveForm" :model="saveForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
-        <el-form-item label="公司名：" prop="name">
-          <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="公司编号：" prop="code">
+        <el-form-item label="用户工号：" prop="code">
           <el-input v-model="saveForm.code" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="助记码：" prop="mnemonicCode">
-          <el-input v-model="saveForm.mnemonicCode" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="初始密码：" prop="password">
+          <el-input v-model="saveForm.password" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="法人：" prop="master">
-          <el-input v-model="saveForm.master" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="名字：" prop="name">
+          <el-input v-model="saveForm.name" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="税号：" prop="tax">
-          <el-input v-model="saveForm.tax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="职位：" prop="positionName">
+          <el-input v-model="saveForm.positionName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="传真：" prop="fax">
-          <el-input v-model="saveForm.fax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="性别：" prop="sex">
+          <el-input v-model="saveForm.sex" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="生日：" prop="birthday">
+          <el-input v-model="saveForm.birthday" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="职务：" prop="positionName">
+          <el-input v-model="saveForm.positionName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="电话：" prop="tel">
           <el-input v-model="saveForm.tel" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="地址：" prop="address">
-          <el-input v-model="saveForm.address" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="所属机构：" prop="orgName">
-          <el-input v-model="saveForm.orgName" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="邮编：" prop="email">
+        <el-form-item label="邮箱：" prop="email">
           <el-input v-model="saveForm.email" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="其他/微信：" prop="other">
+          <el-input v-model="saveForm.other" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input v-model="saveForm.remark" style="width: 500px" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="是否启用：" prop="status">
           <el-radio v-model="saveForm.status" label="1">是</el-radio>
@@ -161,47 +207,50 @@
       </span>
     </el-dialog>
     <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
-      <span>确定要删除公司的基本信息吗？</span>
+      <span>确定要删除该用户吗？</span>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
         <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="updateDialogVisible" title="修改公司的基本信息" center>
+    <el-dialog :visible.sync="updateDialogVisible" title="修改用户" center>
       <el-header style="height: 5px">
-        <i class="el-icon-user" style="float: left">公司基本信息</i>
+        <i class="el-icon-user" style="float: left">用户基本信息</i>
       </el-header>
       <el-divider style="margin: 10px 0px" />
       <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
-        <el-form-item label="公司名：" prop="name">
-          <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="公司编号：" prop="code">
+        <el-form-item label="用户工号：" prop="code">
           <el-input v-model="updateForm.code" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="助记码：" prop="mnemonicCode">
-          <el-input v-model="updateForm.mnemonicCode" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="初始密码：" prop="password">
+          <el-input v-model="updateForm.password" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="法人：" prop="master">
-          <el-input v-model="updateForm.master" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="名字：" prop="name">
+          <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="税号：" prop="tax">
-          <el-input v-model="updateForm.tax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="职位：" prop="positionName">
+          <el-input v-model="updateForm.positionName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="传真：" prop="fax">
-          <el-input v-model="updateForm.fax" style="width: 200px" placeholder="请输入" />
+        <el-form-item label="性别：" prop="sex">
+          <el-input v-model="updateForm.sex" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="生日：" prop="birthday">
+          <el-input v-model="updateForm.birthday" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="职务：" prop="positionName">
+          <el-input v-model="updateForm.positionName" style="width: 200px" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="电话：" prop="tel">
           <el-input v-model="updateForm.tel" style="width: 200px" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="地址：" prop="address">
-          <el-input v-model="updateForm.address" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="所属机构：" prop="insitution">
-          <el-input v-model="updateForm.orgName" style="width: 200px" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="邮编：" prop="email">
+        <el-form-item label="邮箱：" prop="email">
           <el-input v-model="updateForm.email" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="其他/微信：" prop="other">
+          <el-input v-model="updateForm.other" style="width: 200px" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input v-model="updateForm.remark" style="width: 500px" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="是否启用：" prop="status">
           <el-radio v-model="updateForm.status" label="1">是</el-radio>
@@ -254,58 +303,58 @@ export default {
         value: 0,
         label: '禁用'
       }],
-      companyData: [],
+      userData: [],
+      roleData: [],
       show: true,
-      queryCompanyData: {
+      queryUserData: {
         name: '',
-        orgName: ''
+        code: '',
+        tel: '',
+        roleName: ''
       },
       FormRules: {
-        companyId: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        code: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        mnemonicCode: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        master: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        tax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        fax: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        orgName: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
-        website: [{ required: true, message: '请输入字典名', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入用户工号', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入初始密码', trigger: 'blur' }],
+        sex: [{ required: true, message: '请输入性别', trigger: 'blur' }],
+        birthday: [{ required: true, message: '请输入生日', trigger: 'blur' }],
+        positionName: [{ required: true, message: '请输入职务', trigger: 'blur' }],
+        tel: [{ required: true, message: '请输入电话', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         status: [{ required: true, message: '请输入字典名', trigger: 'blur' }]
       },
       saveForm: {
-        companyId: '',
+        userId: '',
         name: '',
         code: '',
-        mnemonicCode: '',
-        master: '',
-        tax: '',
-        fax: '',
+        password: '',
+        sex: '',
+        birthday: '',
+        positionName: '',
         tel: '',
-        address: '',
-        orgName: '',
         email: '',
-        website: '',
+        other: '',
+        remark: '',
         status: ''
       },
       updateForm: {
-        companyId: '',
+        userId: '',
         name: '',
         code: '',
-        mnemonicCode: '',
-        master: '',
-        tax: '',
-        fax: '',
+        password: '',
+        sex: '',
+        birthday: '',
+        positionName: '',
         tel: '',
-        address: '',
-        orgName: '',
         email: '',
-        website: '',
+        other: '',
+        remark: '',
         status: ''
       },
       saveDialogVisible: false,
       deleteDialogVisible: false,
-      updateDialogVisible: false
+      updateDialogVisible: false,
+      roleDialogVisible: false
     }
   },
   mounted() {

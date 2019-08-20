@@ -1,10 +1,11 @@
 <template>
   <div class="dashboard-container">
     <el-container>
+      <!--el-aside为树的部分，不用可以删去-->
       <el-aside width="180px">
         <h3 class="el-icon-folder" style="margin: 0px">
-          组织机构
-          <i class="el-icon-plus" />
+          参数管理
+          <i class="el-icon-plus" @click="saveDialogVisible = true" />
           <i class="el-icon-refresh-left" />
         </h3>
         <el-tree
@@ -65,56 +66,43 @@
           </el-menu>
         </div>
       </el-aside>
+      <!--el-main为表格主体的部分，下面都可以直接抄-->
       <el-main>
         <el-header style="height:30% width: 100%">
           <el-row>
             <el-form :inline="true" style="float: left">
-              <el-form-item label="字典名称：">
-                <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+              <el-form-item label="参数类型：">
+                <el-input v-model="querySystemParamData.paramType" size="mini" style="width: 120px" placeholder="请输入" />
               </el-form-item>
-              <el-form-item label="字典类型：">
-                <el-input v-model="dictionaryData.category" style="width: 130px" placeholder="请输入" />
-              </el-form-item>
-              <el-form-item label="状态：">
-                <el-select v-model="dictionaryData.status" placeholder="请选择" style="width: 130px">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+              <el-form-item label="输入参数项：">
+                <el-input v-model="querySystemParamData.param" size="mini" style="width: 120px" placeholder="请输入" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="queryDictionaryData">查询</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button>重置</el-button>
+                <el-button type="primary" size="mini" @click="queryCompany">查询</el-button>
               </el-form-item>
             </el-form>
           </el-row>
           <el-row style="display: inline">
-            <el-button type="success" size="mini">增加</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
-            <el-button type="warning" size="mini">修改</el-button>
-            <el-button type="primary" size="mini">导入</el-button>
-            <el-button type="primary" size="mini">导出</el-button>
+            <el-button type="success" size="mini" icon="el-icon-plus" @click="saveDialogVisible = true">增加</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteDialogVisible = true">删除</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-edit" @click="updateDialogVisible = true">修改</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
           </el-row>
         </el-header>
         <el-main v-if="show">
-          <el-table :data="dictionaryData" border style="width: 100%" height="90%">
+          <el-table :data="systemParamData" border style="width: 100%" stripe="true" height="90%">
             <el-table-column type="selection" width="35" />
-            <el-table-column prop="name" label="字典名" />
-            <el-table-column prop="category" label="字典类型" />
-            <el-table-column prop="value" label="更新时间" />
-            <el-table-column prop="category" label="备注" />
-            <el-table-column prop="remark" label="状态" />
-            <el-table-column label="操作" width="210">
+            <el-table-column prop="paramType" label="选择参数类型" align="center" />
+            <el-table-column prop="param" label="输入参数项" align="center" />
+            <el-table-column prop="value" label="参数值" align="center" />
+            <el-table-column prop="status" label="是否启用" align="center" />
+            <el-table-column label="操作" width="210" align="center">
               <template>
-                <el-button type="primary" icon="el-icon-edit" size="mini" circle />
-                <el-button type="success" icon="el-icon-check" size="mini" circle />
-                <el-button type="warning" icon="el-icon-star-off" size="mini" circle />
-                <el-button type="danger" icon="el-icon-delete" size="mini" circle />
+                <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
+                <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
+                <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
+                <el-button type="primary" size="mini" icon="el-icon-download" />
               </template>
             </el-table-column>
           </el-table>
@@ -125,6 +113,79 @@
         </el-main>
       </el-main>
     </el-container>
+    <el-dialog :visible.sync="saveDialogVisible" title="新增参数" center width="500px">
+      <el-header style="height: 5px">
+        <i class="el-icon-user" style="float: left">参数基本信息</i>
+      </el-header>
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="saveForm" :model="saveForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
+        <el-row>
+          <el-form-item label="参数类型：" prop="paramType">
+            <el-input v-model="saveForm.paramType" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="参数项：" prop="param">
+            <el-input v-model="saveForm.param" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="参数值：" prop="value">
+            <el-input v-model="saveForm.value" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="是否启用：" prop="status">
+            <el-radio v-model="saveForm.status" label="1">是</el-radio>
+            <el-radio v-model="saveForm.status" label="0">否</el-radio>
+          </el-form-item>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="saveDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog style="margin-top: 30px" title="消 息" :visible.sync="deleteDialogVisible" width="40%" center>
+      <span>确定要删除该参数吗？</span>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="delDictionaryData(deleteData.categoryId)">确 定</el-button>
+        <el-button size="mini" @click="deleteDialogVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="updateDialogVisible" title="修改参数" center width="500px">
+      <el-header style="height: 5px">
+        <i class="el-icon-user" style="float: left">参数基本信息</i>
+      </el-header>
+      <el-divider style="margin: 10px 0px" />
+      <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true" :rules="FormRules">
+        <el-row>
+          <el-form-item label="参数类型：" prop="paramType">
+            <el-input v-model="updateForm.paramType" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="参数项：" prop="param">
+            <el-input v-model="updateForm.param" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="参数值：" prop="value">
+            <el-input v-model="updateForm.value" style="width: 200px" placeholder="请输入" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="是否启用：" prop="status">
+            <el-radio v-model="updateForm.status" label="1">是</el-radio>
+            <el-radio v-model="updateForm.status" label="0">否</el-radio>
+          </el-form-item>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="updateDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -135,6 +196,7 @@ export default {
   name: 'Position',
   data() {
     return {
+      // options之上都为树要用的类，不用树可以删去
       DATA: null,
       NODE: null,
       dialogNewFormVisible: false,
@@ -165,19 +227,71 @@ export default {
         value: 0,
         label: '禁用'
       }],
-      dictionaryData: [],
-      show: true
+      systemParamData: [],
+      show: true,
+      querySystemParamData: {
+        paramType: '',
+        param: ''
+      },
+      FormRules: {
+        paramType: [{ required: true, message: '请输入参数类型', trigger: 'blur' }],
+        param: [{ required: true, message: '请输入参数项', trigger: 'blur' }],
+        value: [{ required: true, message: '请输入参数值', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
+      },
+      saveForm: {
+        systemParamId: '',
+        paramType: '',
+        param: '',
+        value: '',
+        status: ''
+      },
+      updateForm: {
+        systemParamId: '',
+        paramType: '',
+        param: '',
+        value: '',
+        status: ''
+      },
+      saveDialogVisible: false,
+      deleteDialogVisible: false,
+      updateDialogVisible: false
     }
   },
   mounted() {
     this.dragControllerDiv()
-    this.getDictionary()
+    this.getCompany()
   },
   methods: {
-    getDictionary() {
-      this.$axios.get('http:// localhost:8080/dictionary/findAll').then(res => {
-        this.dictionaryData = res.data
-        console.log(this.getDictionaryData)
+    getCompany() {
+      this.$axios.get('/company/getCompany').then(res => {
+        this.companyData = res.data
+        for (let i = 0; i < this.companyData.length; i++) {
+          this.options.add(this.company.orgName, i + 1)
+        }
+        console.log(this.companyData)
+      })
+    },
+    queryCompany() {
+      let commonRequest = {}
+      commonRequest = {
+        head: {
+          'version': '1',
+          'token': this.$store.state.user.token,
+          'businessType': '1',
+          'deviceId': '1',
+          'deviceType': '0',
+          'encrypt': 'false'
+        },
+        body: {
+          data: {
+            name: this.queryCompanyData.name,
+            orgName: this.queryCompanyData.orgName
+          }
+        }
+      }
+      this.$axios.get('/company/queryCompany', commonRequest).then(res => {
+        this.companyData = res.data
       })
     },
     handleRightSelect(key) {
@@ -296,10 +410,6 @@ export default {
 .dashboard {
   &-container {
     margin: 10px;
-  }
-  &-text {
-    font-size: 20px;
-    line-height: 10px;
   }
 }
 .span-ellipsis {

@@ -4,17 +4,17 @@
       <el-header style="height:15%; width: 100%">
         <el-form :model="form" :inline="true">
           <el-form-item label="场次名">
-            <el-input placeholder="场次名" size="mini" />
+            <el-input v-model="form.examSession" placeholder="场次名" size="mini" />
           </el-form-item>
           <el-form-item label="考试名">
-            <el-input placeholder="考试名" size="mini" />
+            <el-input v-model="form.title" placeholder="考试名" size="mini" />
           </el-form-item>
           <el-form-item label="试卷发布人">
-            <el-input placeholder="试卷发布人" size="mini" />
+            <el-input v-model="form.publisher" placeholder="试卷发布人" size="mini" />
           </el-form-item>
           <el-form-item label="考试时间段">
             <el-date-picker
-              v-model="time"
+              v-model="form.examTimeRange"
               size="mini"
               type="datetimerange"
               range-separator="~"
@@ -95,7 +95,13 @@ export default {
     return {
       tableData1: [{ title: 'java', examSession: '12334', endTime: new Date().toLocaleString(), planPepoleNum: 5, actualPepoleNum: 50 }],
       tableData2: [{ examiner: 'syt', sex: '男', title: 'java', objectiveSubjectScore: 50, subjectvieSubjectScore: 50, score: 100, ranking: 1, examCostTime: '5分钟', abilityLabel: 'A' }],
-      show: true
+      show: true,
+      form: {
+        examSession: '',
+        title: '',
+        publisher: '',
+        examTimeRange: []
+      }
     }
   },
   methods: {
