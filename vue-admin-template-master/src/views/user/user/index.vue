@@ -99,7 +99,7 @@
             <el-button type="success" size="mini" icon="el-icon-plus" @click="saveDialogVisible = true">增加</el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteDialogVisible = true">删除</el-button>
             <el-button type="warning" size="mini" icon="el-icon-edit" @click="updateDialogVisible = true">修改</el-button>
-            <el-button type="success" size="mini" icon="el-icon-user" @click="userDialogVisible = true">分配角色</el-button>
+            <el-button type="success" size="mini" icon="el-icon-user" @click="roleDialogVisible = true">分配角色</el-button>
           </el-row>
         </el-header>
         <el-main v-if="show">
@@ -122,7 +122,7 @@
                 <el-button type="primary" icon="el-icon-add" size="mini" circle @click="saveDialogVisible = true" />
                 <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
                 <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
-                <el-button type="success" size="mini" icon="el-icon-user" @click="userDialogVisible = true" />
+                <el-button type="success" size="mini" icon="el-icon-user" @click="roleDialogVisible = true" />
               </template>
             </el-table-column>
           </el-table>
@@ -133,6 +133,30 @@
         </el-main>
       </el-main>
     </el-container>
+    <el-dialog :visible.sync="roleDialogVisible" title="分配角色" center>
+      <el-table :data="roleData" border style="width: 100%" stripe="true" height="90%">
+        <el-table-column type="selection" width="35px" />
+        <el-table-column prop="name" label="角色名称" align="center" />
+        <el-table-column prop="code" label="角色代号" align="center" />
+        <el-table-column prop="remark" label="角色备注" align="center" />
+        <el-table-column prop="orgName" label="所属机构" align="center" />
+        <el-table-column prop="companyName" label="所属公司" align="center" />
+        <el-table-column prop="status" label="是否启用" align="center" />>
+        <el-table-column label="操作" width="210" align="center">
+          <template>
+            <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="saveDialogVisible = true" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="deleteDialogVisible = true" />
+            <el-button type="success" icon="el-icon-edit" size="mini" circle @click="updateDialogVisible = true" />
+            <el-button type="success" size="mini" icon="el-icon-circle-plus-outline" @click="manageDialogVisible = true" />
+            <el-button type="success" size="mini" icon="el-icon-user" @click="userDialogVisible = true" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="updateDictionaryData(updateForm)">确 定</el-button>
+        <el-button size="mini" @click="roleDialogVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
     <el-dialog :visible.sync="saveDialogVisible" title="新增用户" center>
       <el-header style="height: 5px">
         <i class="el-icon-user" style="float: left">用户基本信息</i>
@@ -280,6 +304,7 @@ export default {
         label: '禁用'
       }],
       userData: [],
+      roleData: [],
       show: true,
       queryUserData: {
         name: '',
@@ -328,7 +353,8 @@ export default {
       },
       saveDialogVisible: false,
       deleteDialogVisible: false,
-      updateDialogVisible: false
+      updateDialogVisible: false,
+      roleDialogVisible: false
     }
   },
   mounted() {
