@@ -1,26 +1,35 @@
 <template>
   <div class="dashboard-container">
     <el-container v-show="show" style="height: 800px">
-      <el-header style="width: 100%">
-        <el-row>
-          场次名:
-          <el-input placeholder="场次名" size="mini" style="width: 9%" />&nbsp;
-          考试名:
-          <el-input placeholder="考试名" size="mini" style="width: 9%" />&nbsp;
-          试卷发布人:
-          <el-input placeholder="试卷发布人" size="mini" style="width: 9%" />&nbsp;
-          考试时间段:
-          <el-date-picker
-            v-model="time"
-            style="width: 30%"
+      <el-header style="height:15%; width: 100%">
+        <el-form :model="form" :inline="true">
+          <el-form-item label="场次名">
+            <el-input placeholder="场次名" size="mini" />
+          </el-form-item>
+          <el-form-item label="考试名">
+            <el-input placeholder="考试名" size="mini" />
+          </el-form-item>
+          <el-form-item label="试卷发布人">
+            <el-input placeholder="试卷发布人" size="mini" />
+          </el-form-item>
+          <el-form-item label="考试时间段">
+            <el-date-picker
+              v-model="time"
+              size="mini"
+              type="datetimerange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            />
+          </el-form-item>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
             size="mini"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          />&nbsp;
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="getDictionary">查询</el-button>
-        </el-row>
+            style="margin-top: 5px"
+            @click="submit"
+          >查询</el-button>
+        </el-form>
       </el-header>
       <div style="margin-left:20px">
         <el-button type="primary" size="mini">
@@ -28,14 +37,20 @@
         </el-button>
       </div>
       <el-main v-if="show">
-        <el-table :data="tableData" height="90%" style="width: 100%" border @row-click="changeShow">
+        <el-table
+          :data="tableData1"
+          height="90%"
+          style="width: 100%"
+          border
+          @row-click="changeShow"
+        >
           <el-table-column type="selection" width="35" />
-          <el-table-column prop="name" label="考试名" />
-          <el-table-column prop="category" label="场次" />
-          <el-table-column prop="value" label="考试截止时间" />
-          <el-table-column prop="remark" label="计划考试人数" />
-          <el-table-column prop="remark" label="实际考试人数" />
-          <el-table-column prop="remark" label="操作">
+          <el-table-column prop="title" label="考试名" />
+          <el-table-column prop="examSession" label="场次" />
+          <el-table-column prop="endTime" label="考试截止时间" />
+          <el-table-column prop="planPepoleNum" label="计划考试人数" />
+          <el-table-column prop="actualPepoleNum" label="实际考试人数" />
+          <el-table-column label="操作">
             <i style="color:green;font-size:20px" class="el-icon-question" />
           </el-table-column>
         </el-table>
@@ -46,16 +61,16 @@
       </el-main>
     </el-container>
     <div v-show="!show">
-      <el-table border :data="tableData" height="700px" stripe style="width: 100%">
-        <el-table-column prop="name" label="姓名" />
+      <el-table border :data="tableData2" height="700px" stripe style="width: 100%">
+        <el-table-column prop="examiner" label="姓名" />
         <el-table-column prop="sex" label="性别" />
-        <el-table-column prop="exaName" label="考试名" width="180" />>
-        <el-table-column prop="subItem" label="主观题" />
-        <el-table-column prop="objItem" label="客观题" />
+        <el-table-column prop="title" label="考试名" />>
+        <el-table-column prop="objectiveSubjectScore" label="主观题" />
+        <el-table-column prop="subjectvieSubjectScore" label="客观题" />
         <el-table-column prop="score" label="总分" />
         <el-table-column prop="ranking" label="排名" />
-        <el-table-column prop="spendtime" label="考试耗时" />
-        <el-table-column prop="label" label="能力标签" />
+        <el-table-column prop="examCostTime" label="考试耗时" />
+        <el-table-column prop="abilityLabel" label="能力标签" />
       </el-table>
 
       <el-row :gutter="20">
@@ -78,22 +93,17 @@ export default {
   name: 'Position',
   data() {
     return {
-      tableData: [{ remark: 444 }, { remark: 444 }],
+      tableData1: [{ title: 'java', examSession: '12334', endTime: new Date().toLocaleString(), planPepoleNum: 5, actualPepoleNum: 50 }],
+      tableData2: [{ examiner: 'syt', sex: '男', title: 'java', objectiveSubjectScore: 50, subjectvieSubjectScore: 50, score: 100, ranking: 1, examCostTime: '5分钟', abilityLabel: 'A' }],
       show: true
     }
   },
-  mounted() {
-    this.getReport()
-  },
   methods: {
-    getReport() {
-      this.$axios.get('http://localhost:8080/dictionary/findAll').then(res => {
-        this.tableData = res.data
-        //  console.log(this.getDictionaryData)
-      })
-    },
     changeShow() {
       this.show = !this.show
+    },
+    submit() {
+
     }
   }
 }
