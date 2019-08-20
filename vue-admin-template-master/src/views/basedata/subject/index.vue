@@ -6,22 +6,22 @@
         <el-row>
           <el-form :inline="true" style="float: left">
             <el-form-item label="题目分类：">
-              <el-input v-model="dictionaryData.name" style="width: 130px" placeholder="请输入" />
+              <el-input v-model="subject.category" style="width: 130px" placeholder="请输入" />
             </el-form-item>
             <el-form-item label="选择题型：">
-              <el-input v-model="dictionaryData.status" placeholder="请输入" style="width: 130px" />
+              <el-input v-model="subject.subjectType" placeholder="请输入" style="width: 130px" />
             </el-form-item>
             <el-form-item label="输入题目：">
-              <el-input v-model="dictionaryData.status" placeholder="请输入" style="width: 130px" />
+              <el-input v-model="subject.name" placeholder="请输入" style="width: 130px" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="querySubjectData">查询</el-button>
+              <el-button type="primary" @click="queryDictionaryData">查询</el-button>
             </el-form-item>
           </el-form>
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">增加</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="editDictionaryById({},selectList[0])">修改</el-button>
           <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
@@ -30,10 +30,9 @@
       </el-header>
       <!-- 表格 -->
       <el-main v-if="show">
-        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" stripe="true" @selection-change="selectChange">
-          <el-table-column v-model="editRow" type="selection" width="40%" />
-          <!-- 索引 -->
-          <el-table-column prop="name" label="题目" :show-overflow-tooltip="true" />
+        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" @selection-change="selectChange">
+          <el-table-column type="selection" width="40%" />
+          <el-table-column prop="name" :show-overflow-tooltip="true" label="题目" />
           <el-table-column prop="subjectType" label="题目类型" />
           <el-table-column prop="category" label="题目分类" />
           <el-table-column prop="updateTime" label="更新时间" />
@@ -41,7 +40,7 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" circle @click="handleAdd" />
+              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
               <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="editDictionaryById(scope.$index,scope.row)" />
             </template>
@@ -54,31 +53,23 @@
       </el-main>
     </el-container>
     <!-- 增加窗口 -->
-    <el-dialog title="增加题目信息" width="500px" :visible.sync="addFormVisible" :close-on-click-modal="false">
-      <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="FormRules">
+    <el-dialog title="基本信息" width="400px" :visible.sync="addFormVisible" :close-on-click-modal="false">
+      <el-form ref="addForm" :inline="true" :model="addForm" label-width="100px" :rules="addFormRules">
         <el-row>
-          <el-form-item label="题目类型：" prop="category">
-            <el-input v-model="addForm.category" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典名" prop="dictionaryName">
+            <el-input v-model="addForm.dictionaryName" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="题型：" prop="subjectType">
-            <el-input v-model="addForm.sujectType" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典类型" prop="dictionaryType">
+            <el-input v-model="addForm.dictionaryType" auto-complete="off" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="难度：" prop="difficulty">
-            <el-input v-model="addForm.difficulty" auto-complete="off" style="width: 300px" />
+          <el-form-item label="字典值" prop="dictionaryValue">
+            <el-input v-model="addForm.dictionaryValue" auto-complete="off" />
           </el-form-item>
         </el-row>
-        <el-row>
-          <el-form-item label="题目：" prop="name">
-            <el-input v-model="addForm.name" type="textarea" :rows="3" auto-complete="off" style="width: 300px" />
-          </el-form-item>
-        </el-row>
-        <el-form-item label="选项：" prop="answer">
-          <div @click="addSelection">+ 添加选项</div>
-        </el-form-item>
         <el-row>
           <el-form-item label="是否启用" prop="status">
             <el-radio v-model="addForm.status" label="1">是</el-radio>
@@ -86,8 +77,8 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注信息" prop="remark">
-            <el-input v-model="addForm.remark" type="textarea" :rows="4" auto-complete="off" style="width: 300px" />
+          <el-form-item label="备注信息" prop="comment">
+            <el-input v-model="addForm.comment" type="textarea" :rows="4" auto-complete="off" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -175,7 +166,7 @@ export default {
         dictionaryType: '',
         mark: ''
       },
-      dictionaryData: [],
+      subject: [],
       //  列表Loading加载
       listLoading: false,
       //  添加按钮Loading加载
@@ -328,7 +319,7 @@ export default {
               type: 'error'
             })
           }
-          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+          this.$confirm('确认增加吗？', '提示', {}).then(() => {
             this.addLoading = true
             var CommonRequest = {
               url: 'http:localhost:8090/dictionary/save',
@@ -397,7 +388,7 @@ export default {
       }
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+          this.$confirm('确认修改吗？', '提示', {}).then(() => {
             var newDic = {
               id: this.editForm.id,
               dictionaryName: this.editForm.dictionaryName,
@@ -448,7 +439,7 @@ export default {
     },
     //  批量删除
     mutiDel: function() {
-      this.$confirm('确认提交吗？', '提示', {}).then(() => {
+      this.$confirm('确认删除吗？', '提示', {}).then(() => {
         const length = this.selectList.length
         for (let i = 0; i < length; i++) {
           this.deleteDic(this.selectList[i].id)

@@ -102,6 +102,13 @@ export const constantRoutes = [
         name: 'CombExamConfig',
         component: () => import('@/views/basedata/combExamConfig/index'),
         meta: { title: '组卷配置管理' }
+      },
+      {
+        path: 'combExam',
+        name: 'CombExam',
+        hidden: true,
+        component: () => import('@/views/basedata/combExamConfig/combExam'),
+        meta: { title: '增加组卷配置' }
       }
     ]
   },
