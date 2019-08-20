@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <el-container>
+      <!--el-aside为树的部分，不用可以删去-->
       <el-aside width="180px">
         <h3 class="el-icon-folder" style="margin: 0px">
           组织机构
@@ -65,6 +66,7 @@
           </el-menu>
         </div>
       </el-aside>
+      <!--el-main为表格主体的部分，下面都可以直接抄-->
       <el-main>
         <el-header style="height:30% width: 100%">
           <el-row>
@@ -182,7 +184,7 @@
       <el-header style="height: 25px">
         <i class="el-icon-user" style="float: left">公司基本信息</i>
       </el-header>
-      <el-divider style="margin: 15px 0px" />
+      <el-divider style="margin: 10px 0px" />
       <el-form ref="updateForm" :model="updateForm" label-width="100px" size="mini" inline="true">
         <el-form-item label="公司名：">
           <el-input v-model="updateForm.name" style="width: 200px" placeholder="请输入" prop="insitution" />
@@ -234,6 +236,7 @@ export default {
   name: 'Position',
   data() {
     return {
+      // options之上都为树要用的类，不用树可以删去
       DATA: null,
       NODE: null,
       dialogNewFormVisible: false,
