@@ -15,15 +15,15 @@
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
+          <el-button type="success" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="editDictionaryById({},selectList[0])">修改</el-button>
+          <el-button type="warning" size="mini" icon="el-icon-edit" @click="editDictionaryById({},selectList[0])">修改</el-button>
           <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
           <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
         </el-row>
       </el-header>
       <el-main v-if="show">
-        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" @selection-change="selectChange">
+        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="426px" @selection-change="selectChange">
           <el-table-column type="selection" width="40%" />
           <el-table-column prop="name" label="题目类型" />
           <el-table-column prop="remark" label="备注" />
@@ -32,9 +32,9 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
+              <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
-              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="editDictionaryById(scope.$index,scope.row)" />
+              <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="editDictionaryById(scope.$index,scope.row)" />
             </template>
           </el-table-column>
         </el-table>
@@ -126,30 +126,6 @@ export default {
   name: 'Position',
   data() {
     return {
-      // options之上都为树要用的类，不用树可以删去
-      DATA: null,
-      NODE: null,
-      dialogNewFormVisible: false,
-      dialogFormVisible: false,
-      dialogClassifyVisible: false,
-      maxexpandId: api.maxexpandId, // 新增节点开始id
-      non_maxexpandId: api.maxexpandId, // 新增节点开始id(不更改)
-      isLoadingTree: true, // 是否加载节点树
-      setTree: api.treelist, // 节点树数据
-      defaultProps: {
-        children: 'children',
-        label: 'name'
-      },
-      filterText: '',
-      input: '',
-      input2: '',
-      currentPage4: 4,
-      editObj: {},
-      menuVisible: false,
-      objectID: null,
-      // 分类修改*/
-      menuVisible2: false,
-      objectID2: null,
       // 导入窗口显示
       importFormVisible: false,
       // 文件上传List

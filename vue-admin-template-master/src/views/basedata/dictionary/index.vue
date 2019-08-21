@@ -18,16 +18,16 @@
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
+          <el-button type="success" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="editDictionaryById({},selectList[0])">修改</el-button>
+          <el-button type="warning" size="mini" icon="el-icon-edit" @click="editDictionaryById({},selectList[0])">修改</el-button>
           <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
           <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
         </el-row>
       </el-header>
       <!-- 表格 -->
       <el-main v-if="show">
-        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="90%" @selection-change="selectChange">
+        <el-table v-loading="listLoading" :data="currentPageData" border style="width: 100%" height="426px" @selection-change="selectChange">
           <el-table-column v-model="editRow" type="selection" width="40%" />
           <el-table-column prop="name" label="字典名" />
           <el-table-column prop="category" label="字典类型" />
@@ -38,9 +38,9 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
+              <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
-              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="editDictionaryById(scope.$index,scope.row)" />
+              <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="editDictionaryById(scope.$index,scope.row)" />
             </template>
           </el-table-column>
         </el-table>
@@ -206,7 +206,19 @@ export default {
       totalPage: 1, //  统共页数，默认为1
       currentPage: 1, //  当前页数 ，默认为1
       pageSize: 7, //  每页显示数量
-      currentPageData: [{ name: 11, category: 22, remark: 444 }, { remark: 455 }] //  当前页显示内容
+      currentPageData: [{ name: 11, category: 22, remark: 444 },
+      { remark: 455 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },
+      { name: 11, category: 22, remark: 444 },] //  当前页显示内容
     }
   },
   mounted() {
@@ -223,15 +235,15 @@ export default {
     //  分页
     //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
     //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
-    //  getCurrentPageData() {
-    //   let begin = (this.currentPage - 1) * this.pageSize
-    //   let end = this.currentPage * this.pageSize
-    //   var oldTable = this.tableData
-    //   this.currentPageData = oldTable.slice(
-    //   begin,
-    //   end
-    // )
-    // },
+     getCurrentPageData() {
+      let begin = (this.currentPage - 1) * this.pageSize
+      let end = this.currentPage * this.pageSize
+      var oldTable = this.tableData
+      this.currentPageData = oldTable.slice(
+      begin,
+      end
+    )
+    },
     searchDic: function(name, type, mark) {
       var oldData = this.tableData
       var newDic = []

@@ -30,9 +30,9 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template>
-              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
+              <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
-              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="handleEdit" />
+              <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="handleEdit" />
             </template>
           </el-table-column>
         </el-table>

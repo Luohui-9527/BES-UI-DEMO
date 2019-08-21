@@ -55,9 +55,9 @@ module.exports = {
        * 详情: https://cli.vuejs.org/config/#devserver-proxy
        */
       [process.env.VUE_APP_BASE_API]: {
-        // target: `http://127.0.0.1:${port}`,
+        target: `http://127.0.0.1:${port}`,
         // 设置IP和端口的代理
-        target: `http://127.0.0.1:8088`,
+        // target: `http://127.0.0.1:8088`,
 
         // 跨域
         changeOrigin: true,

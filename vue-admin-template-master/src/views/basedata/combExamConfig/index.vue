@@ -15,9 +15,9 @@
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
+          <el-button type="success" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit">修改</el-button>
+          <el-button type="warning" size="mini" icon="el-icon-edit" @click="handleEdit">修改</el-button>
         </el-row>
       </el-header>
       <!-- 表格 -->
@@ -34,9 +34,9 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template>
-              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
+              <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
-              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="handleEdit" />
+              <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="handleEdit" />
             </template>
           </el-table-column>
         </el-table>

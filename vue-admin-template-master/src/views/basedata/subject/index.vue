@@ -6,7 +6,7 @@
         <el-row>
           <el-form :inline="true" style="float: left">
             <el-form-item label="题目分类：">
-              <el-input v-model="subject.category" style="width: 130px" placeholder="请输入" />
+              <el-cascader :options="options" clearable></el-cascader>
             </el-form-item>
             <el-form-item label="选择题型：">
               <el-input v-model="subject.subjectType" placeholder="请输入" style="width: 130px" />
@@ -21,9 +21,9 @@
         </el-row>
         <!-- 按钮 -->
         <el-row style="display: inline">
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
+          <el-button type="success" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="editSubjectById({},selectList[0])">修改</el-button>
+          <el-button type="warning" size="mini" icon="el-icon-edit" @click="editSubjectById({},selectList[0])">修改</el-button>
           <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
           <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
         </el-row>
@@ -41,9 +41,9 @@
           <!-- 操作按钮 -->
           <el-table-column fixed="right" label="操作" width="150%">
             <template slot-scope="scope">
-              <el-button type="primary" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
+              <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
               <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
-              <el-button type="primary" icon="el-icon-edit" size="mini" circle @click="editSubjectById(scope.$index,scope.row)" />
+              <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="editSubjectById(scope.$index,scope.row)" />
             </template>
           </el-table-column>
         </el-table>
