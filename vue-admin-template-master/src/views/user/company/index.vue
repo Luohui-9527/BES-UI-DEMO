@@ -321,7 +321,7 @@ export default {
       updateDialogVisible: false
     }
   },
-  mounted() {
+  created() {
     this.getCompany()
   },
   methods: {
