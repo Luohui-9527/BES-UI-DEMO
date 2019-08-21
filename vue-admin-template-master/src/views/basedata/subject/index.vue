@@ -6,7 +6,7 @@
         <el-row>
           <el-form :inline="true" style="float: left">
             <el-form-item label="题目分类：">
-              <el-cascader :options="options" clearable></el-cascader>
+              <el-cascader :options="options" clearable />
             </el-form-item>
             <el-form-item label="选择题型：">
               <el-input v-model="subject.subjectType" placeholder="请输入" style="width: 130px" />

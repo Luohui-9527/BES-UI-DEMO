@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <el-container style="height: 800px">
-       <!--el-aside为树的部分，不用可以删去-->
+      <!--el-aside为树的部分，不用可以删去-->
       <el-aside width="180px">
         <h3 class="el-icon-folder" style="margin: 0px">
           组织机构
@@ -68,49 +68,49 @@
       </el-aside>
       <el-main>
         <el-header style="height:10%; width: 100%">
-        <!-- 表头 -->
-        <el-row>
-          <el-form :inline="true" style="float: left" :model="filters">
-            <el-form-item label="题目类别：">
-              <el-input v-model="filters.name" style="width: 130px" placeholder="请输入" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-search" @click="searchDic(filters.name)">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </el-row>
-        <!-- 按钮 -->
-        <el-row style="display: inline">
-          <el-button type="success" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
-          <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
-          <el-button type="warning" size="mini" icon="el-icon-edit" @click="handleEdit">修改</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
-        </el-row>
-      </el-header>
-      <el-main v-if="show">
-        <el-table :data="tableData" border style="width: 100%" height="426px">
-          <el-table-column type="selection" width="40%" />
-          <el-table-column prop="name" label="题目类别" />
-          <el-table-column prop="category" label="备注" />
-          <el-table-column prop="value" label="更新时间" />
-          <el-table-column prop="remark" label="状态" />
-          <el-table-column label="操作" width="150%">
-            <template>
-              <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd"/>
-              <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel"/>
-              <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="handleEdit"/>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <span class="demonstration" />
-          <el-pagination
-            layout="prev, pager, next"
-            :total="50"
-          />
-        </div>
-      </el-main>
+          <!-- 表头 -->
+          <el-row>
+            <el-form :inline="true" style="float: left" :model="filters">
+              <el-form-item label="题目类别：">
+                <el-input v-model="filters.name" style="width: 130px" placeholder="请输入" />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" icon="el-icon-search" @click="searchDic(filters.name)">查询</el-button>
+              </el-form-item>
+            </el-form>
+          </el-row>
+          <!-- 按钮 -->
+          <el-row style="display: inline">
+            <el-button type="success" size="mini" icon="el-icon-plus" @click="handleAdd">增加</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click="mutiDel">删除</el-button>
+            <el-button type="warning" size="mini" icon="el-icon-edit" @click="handleEdit">修改</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-upload" @click="handleImport">导入</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-download">导出</el-button>
+          </el-row>
+        </el-header>
+        <el-main v-if="show">
+          <el-table :data="tableData" border style="width: 100%" height="426px">
+            <el-table-column type="selection" width="40%" />
+            <el-table-column prop="name" label="题目类别" />
+            <el-table-column prop="category" label="备注" />
+            <el-table-column prop="value" label="更新时间" />
+            <el-table-column prop="remark" label="状态" />
+            <el-table-column label="操作" width="150%">
+              <template>
+                <el-button type="success" icon="el-icon-plus" size="mini" circle @click="handleAdd" />
+                <el-button type="danger" icon="el-icon-delete" size="mini" circle @click="mutiDel" />
+                <el-button type="warning" icon="el-icon-edit" size="mini" circle @click="handleEdit" />
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="block">
+            <span class="demonstration" />
+            <el-pagination
+              layout="prev, pager, next"
+              :total="50"
+            />
+          </div>
+        </el-main>
       </el-main>
     </el-container>
     <!-- 增加窗口 -->
@@ -191,7 +191,6 @@
 
 <script>
 import api from '@/resource/api'
-import { save, del, update, query, getData } from '@/api/user/company.js'
 api.treelist = api.treelist.splice(0, 10)
 export default {
   name: 'Position',
@@ -245,7 +244,7 @@ export default {
       },
       formRules: {
         category: [{ required: true, message: '请输入题目类别', trigger: 'blur' }],
-        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择是否启用', trigger: 'blur' }]
       }
     }
   },

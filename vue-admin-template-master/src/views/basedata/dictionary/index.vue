@@ -206,44 +206,27 @@ export default {
       totalPage: 1, //  统共页数，默认为1
       currentPage: 1, //  当前页数 ，默认为1
       pageSize: 7, //  每页显示数量
-      currentPageData: [{ name: 11, category: 22, remark: 444 },
-      { remark: 455 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },
-      { name: 11, category: 22, remark: 444 },] //  当前页显示内容
+      currentPageData: [
+        { name: 11, category: 22, remark: 444 },
+        { remark: 455 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 },
+        { name: 11, category: 22, remark: 444 }
+      ] //  当前页显示内容
     }
   },
   mounted() {
     //  初始加载
   },
   methods: {
-    countPages: function() {
-      //  计算一共有几页
-      this.totalPage = Math.ceil(this.tableData.length / this.pageSize)
-      //  计算得0时设置为1
-      this.totalPage = this.totalPage === 0 ? 1 : this.totalPage
-      this.getCurrentPageData()
-    },
-    //  分页
-    //  设置当前页面数据，对数组操作的截取规则为[0~9],[10~20]...,
-    //  当currentPage为1时，我们显示(0*pageSize+1)-1*pageSize，当currentPage为2时，我们显示(1*pageSize+1)-2*pageSize...
-     getCurrentPageData() {
-      let begin = (this.currentPage - 1) * this.pageSize
-      let end = this.currentPage * this.pageSize
-      var oldTable = this.tableData
-      this.currentPageData = oldTable.slice(
-      begin,
-      end
-    )
-    },
     searchDic: function(name, type, mark) {
       var oldData = this.tableData
       var newDic = []
