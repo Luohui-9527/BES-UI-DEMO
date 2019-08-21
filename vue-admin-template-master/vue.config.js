@@ -58,6 +58,8 @@ module.exports = {
         target: `http://127.0.0.1:${port}`,
         // 设置IP和端口的代理
         // target: `http://127.0.0.1:8088`,
+        //网关
+        //target: `http://127.0.0.1:8763`,
 
         // 跨域
         changeOrigin: true,
